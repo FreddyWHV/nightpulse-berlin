@@ -106,13 +106,6 @@ export function buildDayOptions(count = 14, from: Date = new Date()): DayOption[
   });
 }
 
-export function formatDayHeadline(date: Date): string {
-  const tonight = nightDateOf();
-  if (isSameDay(date, tonight)) return 'Tonight in Berlin';
-  if (isSameDay(date, addDays(tonight, 1))) return 'Tomorrow night';
-  return `${WEEKDAYS_LONG[date.getDay()]}, ${date.getDate()} ${MONTHS_LONG[date.getMonth()]}`;
-}
-
 /** Compact label for the date filter button: "Today", "Tomorrow", "Sat, 4 Oct". */
 export function formatDayButton(date: Date): string {
   const tonight = nightDateOf();

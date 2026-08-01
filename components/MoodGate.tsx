@@ -151,7 +151,7 @@ export function MoodGate() {
         </View>
 
         <Text className="text-brand-ink mt-2 text-[11px] font-semibold tracking-[1.6px] uppercase">
-          NightPulse Berlin
+          NIGHTPULSE
         </Text>
         <Text className="text-ink mt-2 text-center text-[28px] leading-[33px] font-semibold tracking-[-0.7px]">
           What are you up for today?

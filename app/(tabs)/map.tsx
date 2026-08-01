@@ -17,13 +17,6 @@ import { useFilterStore } from '@/lib/filterStore';
 import type { ScoredEvent } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
-const BERLIN_REGION = {
-  latitude: 52.505,
-  longitude: 13.42,
-  latitudeDelta: 0.11,
-  longitudeDelta: 0.11,
-};
-
 interface VenueGroup {
   id: string;
   latitude: number;
@@ -43,7 +36,7 @@ interface VenueGroup {
  * Every event of the night stays reachable — matching ones just get the accent
  * colour.
  */
-function groupByVenue(entries: ScoredEvent[]): VenueGroup[] {
+function groupByVenue(entries: ScoredEvent[], fallbackName: string): VenueGroup[] {
   const groups = new Map<string, VenueGroup>();
 
   for (const entry of entries) {
@@ -62,7 +55,7 @@ function groupByVenue(entries: ScoredEvent[]): VenueGroup[] {
       id,
       latitude,
       longitude,
-      venueName: entry.event.venue_name ?? entry.event.organizer_name ?? 'Berlin',
+      venueName: entry.event.venue_name ?? entry.event.organizer_name ?? fallbackName,
       organizerName: entry.event.organizer_name ?? entry.event.venue_name,
       organizerImageUrl: entry.event.organizer_image_url,
       district: entry.event.district,
@@ -83,7 +76,7 @@ function groupByVenue(entries: ScoredEvent[]): VenueGroup[] {
 
 export default function MapScreen() {
   const router = useRouter();
-  const { headline, dateLabel, vibeLabel, vibes, counts, day, ranked } = useNightFilter();
+  const { city, dateLabel, vibeLabel, vibes, counts, day, ranked } = useNightFilter();
 
   const setDay = useFilterStore((state) => state.setDay);
   const toggleVibe = useFilterStore((state) => state.toggleVibe);
@@ -95,8 +88,8 @@ export default function MapScreen() {
   const tabBarClearance = useTabBarClearance();
 
   const groups = useMemo(
-    () => groupByVenue([...ranked.recommended, ...ranked.others]),
-    [ranked.recommended, ranked.others],
+    () => groupByVenue([...ranked.recommended, ...ranked.others], city.name),
+    [ranked.recommended, ranked.others, city.name],
   );
 
   const eventCount = useMemo(
@@ -128,10 +121,13 @@ export default function MapScreen() {
   return (
     <SafeAreaView edges={['top']} className="bg-canvas flex-1">
       <FilterHeader
-        title={headline}
-        caption={`${eventCount} ${eventCount === 1 ? 'event' : 'events'} at ${groups.length} ${
-          groups.length === 1 ? 'place' : 'places'
-        }`}
+        caption={
+          city.hasListings
+            ? `${eventCount} ${eventCount === 1 ? 'event' : 'events'} at ${groups.length} ${
+                groups.length === 1 ? 'place' : 'places'
+              }`
+            : 'Coming soon'
+        }
         dateLabel={dateLabel}
         vibeLabel={vibeLabel}
         vibeActive={vibes.length > 0}
@@ -141,8 +137,9 @@ export default function MapScreen() {
 
       <View className="flex-1 overflow-hidden">
         <MapView
+          key={city.id}
           style={{ flex: 1 }}
-          initialRegion={BERLIN_REGION}
+          initialRegion={city.region}
           markers={markers}
           showsPointsOfInterest={false}
           showsScale={false}
@@ -150,16 +147,18 @@ export default function MapScreen() {
           onPress={() => setActiveId(null)}
         />
 
-        <View className="border-line bg-card/95 absolute top-3 left-5 flex-row items-center gap-3 rounded-full border px-3 py-2">
-          <View className="flex-row items-center gap-1.5">
-            <View className="bg-brand h-2 w-2 rounded-full" />
-            <Text className="text-ink text-[11px] font-medium">For you</Text>
+        {city.hasListings ? (
+          <View className="border-line bg-card/95 absolute top-3 left-5 flex-row items-center gap-3 rounded-full border px-3 py-2">
+            <View className="flex-row items-center gap-1.5">
+              <View className="bg-brand h-2 w-2 rounded-full" />
+              <Text className="text-ink text-[11px] font-medium">For you</Text>
+            </View>
+            <View className="flex-row items-center gap-1.5">
+              <View className="bg-ink-faint h-2 w-2 rounded-full" />
+              <Text className="text-ink-soft text-[11px] font-medium">Everything else</Text>
+            </View>
           </View>
-          <View className="flex-row items-center gap-1.5">
-            <View className="bg-ink-faint h-2 w-2 rounded-full" />
-            <Text className="text-ink-soft text-[11px] font-medium">Everything else</Text>
-          </View>
-        </View>
+        ) : null}
 
         {active ? (
           <View
@@ -237,7 +236,9 @@ export default function MapScreen() {
           >
             <View className="border-line bg-card/95 rounded-full border px-3.5 py-2">
               <Text className="text-ink-soft text-[12px] font-medium">
-                Tap a pin to see what is on
+                {city.hasListings
+                  ? 'Tap a pin to see what is on'
+                  : `No listings in ${city.name} yet`}
               </Text>
             </View>
           </View>

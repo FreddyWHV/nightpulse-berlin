@@ -1,13 +1,15 @@
 import { Pressable, Text, View } from 'react-native';
 import { CalendarDays, ChevronDown, SlidersHorizontal } from 'lucide-react-native';
 
+import { CityPicker } from '@/components/CityPicker';
 import { PulseBadge } from '@/components/PulseLogo';
 import { palette } from '@/lib/colors';
 import { cn } from '@/lib/utils';
 
+const HEADLINE_SIZE = 22;
+const HEADLINE_LINE = 27;
+
 interface FilterHeaderProps {
-  /** Big headline, e.g. "Tonight in Berlin". Always one line so both tabs match. */
-  title: string;
   /** One-line context below the headline. */
   caption: string;
   dateLabel: string;
@@ -54,12 +56,11 @@ function FilterButton({
 }
 
 /**
- * Fixed top bar shared by feed and map: logo, headline and the two filter
- * buttons. Both screens render it with identical geometry so nothing moves
- * when switching tabs.
+ * Fixed top bar shared by feed and map: headline with the city switcher, logo
+ * and the two filter buttons. Both screens render it with identical geometry so
+ * nothing moves when switching tabs.
  */
 export function FilterHeader({
-  title,
   caption,
   dateLabel,
   vibeLabel,
@@ -68,18 +69,22 @@ export function FilterHeader({
   onPressVibe,
 }: FilterHeaderProps) {
   return (
-    <View className="border-line bg-canvas border-b px-5 pt-1 pb-3.5">
-      <View className="flex-row items-center justify-between">
+    <View className="border-line bg-canvas border-b px-5 pt-2 pb-3.5">
+      <View className="flex-row items-start justify-between">
         <View className="flex-1 pr-3">
-          <Text className="text-brand-ink text-[11px] font-semibold tracking-[1.4px] uppercase">
-            NightPulse Berlin
-          </Text>
-          <Text
-            numberOfLines={1}
-            className="text-ink mt-1 text-[25px] leading-[30px] font-semibold tracking-[-0.6px]"
-          >
-            {title}
-          </Text>
+          <View className="flex-row items-start gap-1.5">
+            <Text
+              numberOfLines={1}
+              className="text-ink font-semibold tracking-[-0.6px]"
+              style={{ fontSize: HEADLINE_SIZE, lineHeight: HEADLINE_LINE }}
+            >
+              NIGHTPULSE in
+            </Text>
+            {/* Shrinks first on very narrow screens so the wordmark stays whole. */}
+            <View className="shrink">
+              <CityPicker fontSize={HEADLINE_SIZE} lineHeight={HEADLINE_LINE} />
+            </View>
+          </View>
           <Text numberOfLines={1} className="text-ink-soft mt-0.5 text-[13px]">
             {caption}
           </Text>

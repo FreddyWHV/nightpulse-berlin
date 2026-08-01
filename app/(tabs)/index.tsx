@@ -23,7 +23,7 @@ type FeedRow =
 export default function FeedScreen() {
   const router = useRouter();
   const {
-    headline,
+    city,
     dateLabel,
     vibeLabel,
     vibes,
@@ -46,6 +46,15 @@ export default function FeedScreen() {
 
   const rows = useMemo<FeedRow[]>(() => {
     const result: FeedRow[] = [];
+
+    if (!city.hasListings) {
+      result.push({
+        kind: 'note',
+        key: 'note-city',
+        text: `NIGHTPULSE is not live in ${city.name} yet. Berlin is the only city with listings — tap the city name to switch back.`,
+      });
+      return result;
+    }
 
     if (ranked.recommended.length) {
       result.push({
@@ -77,7 +86,7 @@ export default function FeedScreen() {
       result.push({
         kind: 'section',
         key: 'sec-others',
-        title: ranked.recommended.length ? 'Also on in Berlin' : 'On in Berlin',
+        title: ranked.recommended.length ? `Also on in ${city.name}` : `On in ${city.name}`,
         caption: `${ranked.others.length}`,
       });
       ranked.others.forEach((item, index) => {
@@ -100,17 +109,18 @@ export default function FeedScreen() {
     }
 
     return result;
-  }, [ranked, vibes.length, isPending]);
+  }, [ranked, vibes.length, isPending, city]);
 
   const total = ranked.recommended.length + ranked.others.length;
-  const caption = ranked.recommended.length
-    ? `${total} events · ${ranked.recommended.length} for you`
-    : `${total} ${total === 1 ? 'event' : 'events'}`;
+  const caption = !city.hasListings
+    ? 'Coming soon'
+    : ranked.recommended.length
+      ? `${total} events · ${ranked.recommended.length} for you`
+      : `${total} ${total === 1 ? 'event' : 'events'}`;
 
   return (
     <SafeAreaView edges={['top']} className="bg-canvas flex-1">
       <FilterHeader
-        title={headline}
         caption={caption}
         dateLabel={dateLabel}
         vibeLabel={vibeLabel}

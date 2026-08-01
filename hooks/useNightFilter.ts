@@ -2,7 +2,8 @@ import { useMemo } from 'react';
 import { parseISO } from 'date-fns';
 
 import { useEventFeed } from '@/hooks/useEvents';
-import { formatDayButton, formatDayHeadline, nightKeyOf } from '@/lib/dates';
+import { cityById } from '@/lib/cities';
+import { formatDayButton, nightKeyOf } from '@/lib/dates';
 import { useFavoritesStore } from '@/lib/favoritesStore';
 import { useFilterStore } from '@/lib/filterStore';
 import { useProfileStore } from '@/lib/profileStore';
@@ -18,6 +19,9 @@ export function useNightFilter() {
 
   const day = useFilterStore((state) => state.day);
   const vibes = useFilterStore((state) => state.vibes);
+  const cityId = useFilterStore((state) => state.cityId);
+
+  const city = cityById(cityId);
 
   const favorites = useFavoritesStore((state) => state.items);
 
@@ -26,7 +30,12 @@ export function useNightFilter() {
   const maxPrice = useProfileStore((state) => state.maxPrice);
   const freeOnly = useProfileStore((state) => state.freeOnly);
 
-  const events = useMemo(() => query.data?.events ?? [], [query.data]);
+  // The database only holds Berlin listings, so any other city is honestly empty
+  // rather than showing Berlin events under the wrong name.
+  const events = useMemo(
+    () => (city.hasListings ? (query.data?.events ?? []) : []),
+    [query.data, city.hasListings],
+  );
 
   const counts = useMemo(() => {
     const map: Record<string, number> = {};
@@ -61,10 +70,10 @@ export function useNightFilter() {
     ...query,
     events,
     counts,
+    city,
     day,
     vibes,
     selectedDate,
-    headline: formatDayHeadline(selectedDate),
     dateLabel: formatDayButton(selectedDate),
     vibeLabel,
     ranked,
