@@ -1,0 +1,9 @@
+{
+  "counts": {
+    "venues_with_feeds": 49,
+    "review_pending": 140,
+    "blocked": 55,
+    "events": 808
+  },
+  "generated_from": "worker/data/sources.json"
+}

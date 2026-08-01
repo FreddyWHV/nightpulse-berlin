@@ -187,6 +187,16 @@ def cmd_clear(args) -> None:
     print("\n%d sources cleared for html_llm -> %s" % (len(changed), config.SOURCES_PATH))
 
 
+def cmd_export(args) -> None:
+    """Write the handover package for downstream projects."""
+    from . import export
+
+    counts = export.run()
+    print("handover package -> %s" % export.HANDOVER_DIR)
+    for k, v in counts.items():
+        print("  %-20s %d" % (k, v))
+
+
 def cmd_report(args) -> None:
     rows = registry.load()
     if not rows:
@@ -237,6 +247,7 @@ def main() -> None:
     p.add_argument("--note", help="why this was cleared")
     p.set_defaults(fn=cmd_clear)
     p = sub.add_parser("push"); p.set_defaults(fn=cmd_push)
+    p = sub.add_parser("export"); p.set_defaults(fn=cmd_export)
     p = sub.add_parser("report"); p.set_defaults(fn=cmd_report)
     p = sub.add_parser("guard-test"); p.set_defaults(fn=cmd_guard_test)
 

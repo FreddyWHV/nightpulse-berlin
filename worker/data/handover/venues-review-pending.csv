@@ -1,0 +1,141 @@
+name,type,district,lat,lng,homepage,reason,osm_id
+Bar im Wasserturm,venue,Alt-Hohenschönhausen,52.547659,13.4887104,http://www.berlin-wasserturm.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/306915565
+Café Keese,venue,Charlottenburg,52.5120173,13.3165894,http://www.cafekeese.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/3184975056
+Cocktailbar Zeitlos IV,venue,Charlottenburg,52.5054368,13.3176983,http://cocktailbarzeitlos.de,error: ConnectTimeout,node/3455613401
+gainsbourg bar américain,venue,Charlottenburg,52.5046693,13.3250472,http://www.gainsbourg.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/648238268
+Gecco,venue,Charlottenburg,52.5034256,13.3344065,http://gecco-bar.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/3354419276
+Hildegard Bar,venue,Charlottenburg,52.5030662,13.3368675,https://www.hildegardbar-berlin.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/5933931111
+Balance Wein Bar,venue,Friedrichshain,52.5217699,13.4494539,https://weinbalance.com,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/2866626835
+Berndhain,club,Friedrichshain,52.5091003,13.4560428,https://berndhain.com,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/621429565
+Cassiopeia,venue,Friedrichshain,52.5069978,13.4543762,https://www.cassiopeia-berlin.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/9698094769
+Maaya,club,Friedrichshain,52.5072185,13.4527013,https://maaya.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",way/342600129
+OST,club,Friedrichshain,52.4970681,13.4650321,https://clubost.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/8069721818
+Pirates Club,club,Friedrichshain,52.5027268,13.4453492,https://piratesberlin.com/club,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/9806828894
+RAW 99,club,Friedrichshain,52.5076615,13.454537,http://www.raw-tempel.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/492849637
+Uber Arena,club,Friedrichshain,52.5063401,13.4437589,https://www.uber-arena.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",way/25007895
+Uber Eats Music Hall,club,Friedrichshain,52.5049039,13.4431471,https://www.uber-eats-music-hall.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/6058229940
+Balcone Lounge,venue,Kreuzberg,52.4888108,13.4117261,http://balcone-lounge.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/4998526587
+Bistro Spumante,venue,Kreuzberg,52.4943295,13.4338186,https://www.bistro-spumante.org,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/2520313547
+Blarney Pub,venue,Kreuzberg,52.4895024,13.3854467,http://blarney-pub.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/3571993093
+Bulbul Berlin,club,Kreuzberg,52.4993312,13.4242521,https://www.bulbulberlin.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/1941952571
+Galander Kreuzberg,venue,Kreuzberg,52.4919033,13.3831496,https://www.galander.berlin/galander-bar-kreuzberg,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/3163411214
+Junction-Bar,club,Kreuzberg,52.4913696,13.3931533,https://www.junction-bar.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/259845846
+spindler & klatt,club,Kreuzberg,52.5058678,13.4346441,https://spindlerklatt.com,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/9895178218
+203 Bar im Fernsehturm,venue,Mitte,52.5208599,13.4093633,https://www.tv-turm.de/de/bar-restaurant,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/4948143723
+Bar Saint Jean,venue,Mitte,52.5235889,13.3907508,https://sites.google.com/view/barsaintjean,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/9045180679
+Bar Steinkeller,venue,Mitte,52.5273496,13.4039576,https://cocktailbar-steinkeller.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/3239758885
+Bar Tausend,venue,Mitte,52.5208236,13.3847097,https://tausendberlin.com,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/1391604297
+Berlin Icebar - Polar Expedition,venue,Mitte,52.5212657,13.4036317,https://berlinicebar.com,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/5726198087
+Betty F***,venue,Mitte,52.5275404,13.4052143,http://www.bettyf.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/1278254656
+Billardsalon Köh,venue,Mitte,52.5252025,13.4018544,http://www.billardkoeh.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/309902514
+Clärchens Ballhaus,club,Mitte,52.5264743,13.39691,https://www.claerchensball.haus,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/429735547
+Cosmic Kaspar,club,Mitte,52.5299774,13.4006925,https://www.cosmic-kaspar.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/6482231157
+Das Caro,venue,Mitte,52.531471,13.3857245,https://www.dascaro-berlin.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/6298093554
+Eschschloraque Rümschrümp,venue,Mitte,52.5244696,13.4017208,http://www.eschschloraque.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/945106909
+Gestrandet an der Jannowitzbrücke,venue,Mitte,52.514901,13.4173876,https://strandhaus-berlin.de/de/gestrandet-mitte,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/3458901232
+Hafenbar,club,Mitte,52.5217615,13.4075481,https://www.hafenbar-berlin.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/1145853246
+Kit Kat Club,club,Mitte,52.5112074,13.4169157,http://www.kitkatclub.org,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/729294555
+LARK,club,Mitte,52.5130237,13.4227766,https://larkberlin.com,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",way/136852555
+NBI Club,club,Mitte,52.53567,13.401179,http://www.neueberlinerinitiative.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/670069373
+Sage,club,Mitte,52.5110197,13.4169088,https://www.sage-club.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/667842214
+Weekend Club,club,Mitte,52.5229029,13.4164231,http://www.week-end-berlin.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/1162812586
+Bata,venue,Moabit,52.5303619,13.3670529,https://www.batabar.com,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/4307700921
+George R,venue,Moabit,52.5301741,13.3411616,https://george-r.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/2712285022
+Slaughterhouse,club,Moabit,52.5344022,13.3597082,https://www.slaughterhouse-berlin.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/1954332576
+Arkaoda,venue,Neukölln,52.4738852,13.4425685,http://berlin.arkaoda.com,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/1954982646
+B-Lage,venue,Neukölln,52.4736946,13.451159,http://www.b-lage.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/2308129193
+Bajszel,venue,Neukölln,52.4696889,13.4394258,https://bajszel.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/7905585320
+Café Augusta,venue,Neukölln,52.4715083,13.4336754,https://cafeaugusta.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/1884132781
+Das Rössle,venue,Neukölln,52.4709121,13.4468415,https://www.ckb08.de/das-roessle,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/2918828516
+Jaja,venue,Neukölln,52.4841767,13.4330258,https://jajawein.de/jaja-berlin,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/2860066610
+8MM,venue,Prenzlauer Berg,52.5312243,13.4115684,https://www.8mmbar.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/4172803384
+Alte Kantine,club,Prenzlauer Berg,52.5395329,13.4136676,https://alte-kantine.eu,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/3469247893
+Badfish,venue,Prenzlauer Berg,52.546571,13.4176684,http://www.badfishbarberlin.com,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/3380514461
+Becketts Kopf,venue,Prenzlauer Berg,52.5454977,13.4169082,https://becketts-kopf.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/1673390303
+Crossroads,venue,Prenzlauer Berg,52.5442189,13.4155164,https://crossroadsbarberlin.wordpress.com,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/566734795
+Duncker,club,Prenzlauer Berg,52.546199,13.4237143,https://www.dunckerclub.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",way/41474936
+Enoteca Sorsi e Morsi,venue,Prenzlauer Berg,52.5345014,13.4248197,http://www.sorsiemorsi.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/1244487091
+Frannz Club,venue,Prenzlauer Berg,52.5382108,13.4126884,http://www.frannz.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/966975630
+Ajpnia,venue,Schöneberg,52.4868332,13.3430245,https://www.ajpnia.berlin,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/1607815772
+Bar Voyage,venue,Schöneberg,52.4979752,13.3562993,https://www.barvoyage.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/383851727
+Billardaire,venue,Schöneberg,52.489166,13.365328,https://www.billardaire.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/1969213797
+Blond,venue,Schöneberg,52.4978319,13.3477984,http://www.blond-berlin.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/11035951199
+Café Nostalgie,venue,Schöneberg,52.4882652,13.361927,http://cafenostalgie-berlin.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/275375441
+Connection,club,Schöneberg,52.4990172,13.3424928,http://www.connection-berlin.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/1882869375
+Fjord,venue,Schöneberg,52.490247,13.3493507,https://fjord-nordicrestaurant.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/3694046846
+Green Door Bar,venue,Schöneberg,52.497044,13.3529334,https://www.greendoor.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/1870419341
+Hafen,venue,Schöneberg,52.4979722,13.3492092,https://hafen-berlin.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/4619327772
+Pussy Cat,club,Schöneberg,52.4987104,13.3479726,http://www.pussycat-berlin.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/3826455881
+Ballhaus Spandau,club,Spandau,52.5227525,13.2107129,https://ballhaus-spandau.club,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/6573680438
+Charlotte,venue,Spandau,52.5372124,13.2022687,http://www.cbb-charlotte.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/286428394
+Hafenbar Tegel,venue,Tegel,52.5883516,13.274449,http://www.hafenbar-tegel.de,error: ConnectError,node/2612336438
+Columbia Theater,club,Tempelhof,52.484708,13.3914545,https://columbia-theater.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",way/22906405
+Columbiahalle,club,Tempelhof,52.4847599,13.3925085,https://www.columbiahalle.berlin/de,"no feed found — html_llm candidate, needs manual clearance before any ingest",way/22906406
+Insomnia,club,Tempelhof,52.4655581,13.3860876,https://www.insomnia-berlin.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/739305494
+Drehmoment,venue,Wedding,52.5555417,13.3445488,https://www.drehmoment.berlin,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/7680872547
+OC23,club,Weißensee,52.5506635,13.4450572,https://kinderring-berlin.de/oc23,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",way/108243893
+808,club,,52.5055769,13.3380226,https://808.berlin,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/12372968542
+al2 eventlocation berlin,club,,52.4989003,13.3230448,https://al2-eventlocation.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/6252070333
+Albert's,venue,,52.56382,13.328849,https://www.alberts-restaurants.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/79675952
+Alte Liebe Tempelhof,venue,,52.4552946,13.3873061,https://www.pier13-eventlocation.com/alte-liebe-tempelhof,"no feed found — html_llm candidate, needs manual clearance before any ingest",way/215462342
+ASeven Club,club,,52.5232268,13.4164254,https://www.aseven.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/262818281
+Baden im Wein,venue,,52.5375887,13.4117811,https://www.badenimwein.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/3095210830
+Bar BoBu,venue,,52.5121173,13.4707775,https://www.barbobu.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/4776626158
+BAR DaF,venue,,52.4911813,13.4497029,https://www.bardaf.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/11777972685
+Bar Neiro,venue,,52.5116908,13.4178864,https://barneiro.com,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/11472992146
+Bar Neun,venue,,52.5023626,13.4311096,https://www.barneun.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/13298640514
+Bar Schwips,venue,,52.5294941,13.3880961,https://barschwips.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/5324651378
+Barbie Bar,venue,,52.4894745,13.3867705,http://www.barbiebar.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/2495554364
+Barkamp,venue,,52.502687,13.263174,https://eichkamp.rocks/events,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/3062860284
+Beach 61 Bar,venue,,52.4961521,13.3719562,https://beach61.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",way/1383716029
+Beach Zone Lichtenberg,venue,,52.5305765,13.4766342,http://beach-zone.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/4846723150
+Beavis Bar,venue,,52.5331583,13.4019413,https://beavis.bar,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/12073516362
+Bebua,venue,,52.5001599,13.3218194,https://bebua.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/5801381294
+Bellboy Berlin,venue,,52.512055,13.3918753,https://bellboybar.com,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/86001835
+Beuster Bar,venue,,52.4859634,13.4353837,https://www.beusterbar.com,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/4545683589
+BLO Kantine,venue,,52.5047247,13.4834592,https://blo-ateliers.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/5776716413
+Botanical Affairs - Gin&Tonic Bar & Shop,venue,,52.529821,13.4047968,https://www.botanical-affairs.com,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/4959707324
+Boyberry Berlin,venue,,52.4980199,13.3493684,https://boyberry.com/berlin,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/11035783613
+Bredouille Bar,venue,,52.5200011,13.3898465,https://bredouille-bar.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/13570353624
+Brickhouse Berlin,club,,52.5502159,13.443135,https://brickhouse-berlin.com,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/13235448541
+BRICKS Club,club,,52.5121321,13.3932376,https://bricks-berlin.club,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/1310466406
+Café Diseño,venue,,52.5585787,13.4129685,https://www.diseno-berlin.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/2963972260
+Café Linie 1,venue,,52.501387,13.3890261,http://cafelinie1.tommyhaus.org,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/4741547274
+Canoa Beach Bar,venue,,52.4774066,13.4577564,https://canoa-berlin.de/de/beach,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/14053356551
+Club Culture Houze,venue,,52.4986939,13.4343375,https://www.club-culture-houze.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/12888468756
+Club49,venue,,52.4950468,13.4300486,http://www.club49-bar.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/9029037207
+Das Weinlokal,venue,,52.5035239,13.4903004,https://dasweinlokal.berlin,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/11204542037
+Deck 5,venue,,52.5493859,13.4164647,http://www.freiluftrebellen.de/en,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/318810769
+Der kleine August,venue,,52.526862,13.3965628,https://derkleineaugust.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/13527396392
+Der Weinlobbyist,venue,,52.48657,13.3592734,https://www.derweinlobbyist.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/417009820
+Dos Pescados,venue,,52.5845924,13.2858237,https://www.dos-pescados-berlin.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/13922816230
+Du Beast (mutant radio),venue,,52.4824527,13.4451507,https://dubeast.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/5313840260
+Duplex Bar,venue,,52.5009634,13.3624824,https://www.duplexbar.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/13817442120
+Eigengrau,venue,,52.4991429,13.4298149,https://www.eigengrau-bar.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/9971724817
+F37 Berlin Weinbar & Kunstgalerie,venue,,52.4989221,13.3266393,https://f37-berlin.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/11873736973
+Facciola,venue,,52.4957929,13.4335797,http://facciola-berlin.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/4720903019
+Festsaal Kreuzberg,club,,52.4968252,13.4515579,https://www.festsaal-kreuzberg.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",way/277805717
+Ficken3000,venue,,52.4886087,13.4227057,https://ficken3000.com,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/11583914069
+FluxBau,club,,52.5029678,13.4411582,https://www.fluxfm.de/fluxbau,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/1897123562
+Franken Bar,venue,,52.5005841,13.4222262,http://www.franken-bar.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/11247047113
+Frau Luna,venue,,52.4963129,13.4211347,https://frauluna-berlin.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/410135936
+Frivole Bar moechtegern,club,,52.5099265,13.3142158,https://moechtegern.com,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/12301286133
+Geheimclub (Annika von Trier),club,,52.5267961,13.3908678,https://annika-von-trier.com/geheimclub,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/4784529624
+GinChilla Bar,venue,,52.5079337,13.4501407,https://www.gin-chilla-bar.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/3907010222
+Hans Weinstube,venue,,52.4988758,13.3510921,http://hans-weinstube.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/3826452056
+Havanna,club,,52.4852704,13.3534485,https://www.havanna-berlin.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/959625062
+Herbst,venue,,52.4879945,13.3740815,https://www.herbst.bar,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/6856217637
+ILOsBar,venue,,52.4977119,13.3474298,https://ilosbar.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/5640234265
+"Jugendschiff ""ReMiLi""",club,,52.4580084,13.5175062,https://remili.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",way/167777311
+MiSalsa,club,,52.5172277,13.305791,https://misalsa.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/4236204189
+Modus Berlin,club,,52.50304,13.4078449,https://modus-berlin.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/13953226361
+Mokka Mitte Bar,club,,52.5222381,13.398307,https://www.mokkamitte.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/7230925407
+MONOM,club,,52.4792421,13.4997366,https://www.monomsound.com,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/9830787917
+Roadrunners Rock & Motor Club,club,,52.5296992,13.4123176,http://www.roadrunners-paradise.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",way/23278633
+Silverwings,club,,52.4835867,13.390553,https://silverwings.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/988192687
+The Door,club,,52.5008789,13.3311044,https://thedoor.club,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/2188253833
+Top Disco Berlin,club,,52.4260543,13.4833923,http://topdisco-berlin.de/home,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",node/3777579770
+Trompete,club,,52.5044307,13.3534385,https://trompete-berlin.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/3830239588
+Werk9,club,,52.5091224,13.394355,https://www.werk9.de,"only a generic site feed (/feed/) — that is the blog, not the programme; html_llm candidate, needs manual clearance",way/24248500
+Wild at Heart,club,,52.4974686,13.4310967,http://wildatheartberlin.de,"no feed found — html_llm candidate, needs manual clearance before any ingest",node/410135945
+ÆDEN,club,,52.4973058,13.449516,http://aedenberlin.com,"no feed found — html_llm candidate, needs manual clearance before any ingest",way/291111616
