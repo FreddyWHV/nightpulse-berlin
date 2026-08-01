@@ -51,3 +51,12 @@ bun.lockb
 
 _openrouter_comms.jsonl
 _project_metadata.jsonl
+# --- Backend worker (Python) ---
+worker/.env
+worker/.venv/
+__pycache__/
+*.pyc
+worker/data/cache/
+worker/data/*.log
+worker/data/probe-log.jsonl
+.claude/

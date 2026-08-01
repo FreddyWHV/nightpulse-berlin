@@ -1,0 +1,143 @@
+{
+  "$comment": "Source clearance registry. The fetcher MUST refuse any source where clearance != 'green'. Seed the `sources` table from this file.",
+  "updated_at": "2026-08-01",
+  "policy": {
+    "green_only": true,
+    "ingest_facts_only": true,
+    "never_store_third_party_descriptions": true,
+    "user_agent": "BerlinEventsBot/0.1 (+https://example.de/bot; contact@example.de)",
+    "max_concurrency_per_host": 1,
+    "default_crawl_delay_s": 5
+  },
+  "sources": [
+    {
+      "key": "kulturdaten_berlin",
+      "name": "kulturdaten.berlin",
+      "type": "open_data",
+      "clearance": "green",
+      "robots_status": "allowed",
+      "ingest_method": "api",
+      "endpoint_url": "https://api-v2.kulturdaten.berlin/api/",
+      "docs_url": "https://api-v2.kulturdaten.berlin/api/docs/",
+      "auth": "free account required",
+      "license": "data CC BY, code MIT",
+      "priority": 2,
+      "note": "Berlin's official cultural data hub (Technologiestiftung Berlin, Senate-funded). Base layer. Build this adapter first."
+    },
+    {
+      "key": "ticketmaster_discovery",
+      "name": "Ticketmaster International Discovery API v2",
+      "type": "api",
+      "clearance": "green",
+      "robots_status": "allowed",
+      "ingest_method": "api",
+      "endpoint_url": "https://app.ticketmaster.eu/mfxapi/v2/",
+      "docs_url": "https://developer.ticketmaster.com/products-and-docs/apis/international-discovery/v2/",
+      "auth": "free API key",
+      "license": "commercial API terms",
+      "priority": 3,
+      "note": "Big venues, concerts, comedy, sport. Filter city=Berlin. Includes ticket links for later affiliate revenue."
+    },
+    {
+      "key": "berlin_open_data",
+      "name": "Berlin Open Data",
+      "type": "open_data",
+      "clearance": "green",
+      "robots_status": "allowed",
+      "ingest_method": "api",
+      "endpoint_url": "https://daten.berlin.de/",
+      "license": "open (per dataset)",
+      "priority": 3,
+      "note": "City/administrative events, markets, public culture."
+    },
+    {
+      "key": "visitberlin",
+      "name": "visitBerlin event calendar",
+      "type": "open_data",
+      "clearance": "review_pending",
+      "robots_status": "unchecked",
+      "ingest_method": "api",
+      "endpoint_url": "https://www.visitberlin.de/en/event-calendar-berlin",
+      "priority": 3,
+      "note": "Official tourism board; they want redistribution. Read their data/partner terms (5 min) before flipping to green."
+    },
+    {
+      "key": "venue_feeds",
+      "name": "Venue-published machine-readable feeds",
+      "type": "venue",
+      "clearance": "green",
+      "robots_status": "per-site check",
+      "ingest_method": "jsonld | ics | rss | wp_rest",
+      "priority": 1,
+      "note": "Highest merge priority. If a venue ships ld+json Event, .ics, RSS or /wp-json/tribe/events/v1/events, it is published FOR machines. Probe each candidate venue for: /wp-json/tribe/events/v1/events, ld+json in page source, /events.ics. Expected hit rate 30-50%.",
+      "probe_paths": [
+        "/wp-json/tribe/events/v1/events",
+        "/wp-json/wp/v2/tribe_events",
+        "/events.ics",
+        "/veranstaltungen.ics",
+        "/feed/",
+        "/events/feed/"
+      ]
+    },
+    {
+      "key": "manual_curation",
+      "name": "Hand-curated + user submissions",
+      "type": "manual",
+      "clearance": "green",
+      "ingest_method": "manual",
+      "priority": 1,
+      "note": "5-10 insider events make the demo feed feel Berlin-real. Later: venue self-serve portal."
+    }
+  ],
+  "blocked": [
+    {
+      "key": "resident_advisor",
+      "domain": "ra.co",
+      "clearance": "blocked",
+      "reason": "robots.txt disallows /api/, blocks commercial crawlers and all named AI agents; ToS forbids scraping. Their GraphQL endpoint is explicitly closed.",
+      "allowed_use": "link out only"
+    },
+    {
+      "key": "rausgegangen",
+      "domain": "rausgegangen.de",
+      "clearance": "blocked",
+      "reason": "robots.txt technically permits crawling, BUT they are a direct aggregator and their event database is protected by sui-generis database right (§ 87b UrhG). Extracting substantial parts is the actual risk.",
+      "allowed_use": "link out; pursue data partnership"
+    },
+    {
+      "key": "luma",
+      "domain": "luma.com, lu.ma",
+      "clearance": "blocked",
+      "reason": "Official API only reads calendars you own (Luma Plus required). Page-scraping their aggregated database raises the same § 87b issue.",
+      "allowed_use": "link out; revisit via official partnership"
+    },
+    {
+      "key": "dice",
+      "domain": "dice.fm",
+      "clearance": "blocked",
+      "reason": "robots.txt: Disallow /api/ for all agents, Content-Signal ai-train=no, all AI crawlers blocked by name.",
+      "allowed_use": "link out; approach via partner/affiliate programme"
+    },
+    {
+      "key": "eventim",
+      "domain": "eventim.de",
+      "clearance": "blocked",
+      "reason": "Aggregated commercial database, no open API.",
+      "allowed_use": "affiliate programme"
+    },
+    {
+      "key": "eventbrite",
+      "domain": "eventbrite.com",
+      "clearance": "blocked",
+      "reason": "Public v3 search endpoint was deprecated in 2020; API now only returns events for orgs you are authorized for. Not usable for discovery.",
+      "allowed_use": "only if you own the org"
+    },
+    {
+      "key": "meta_platforms",
+      "domain": "instagram.com, facebook.com",
+      "clearance": "blocked",
+      "reason": "ToS explicitly forbids automated collection.",
+      "allowed_use": "opt-in venue integration only, never scraping"
+    }
+  ]
+}
