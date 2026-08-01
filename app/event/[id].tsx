@@ -50,7 +50,7 @@ function ActionButton({
       {icon}
       <Text
         className={
-          primary ? 'text-[14px] font-semibold text-white' : 'text-ink text-[14px] font-semibold'
+          primary ? 'text-on-brand text-[14px] font-semibold' : 'text-ink text-[14px] font-semibold'
         }
       >
         {label}
@@ -77,7 +77,7 @@ export default function EventDetailScreen() {
           accessibilityRole="button"
           className="bg-brand mt-4 rounded-2xl px-5 py-3 active:opacity-80"
         >
-          <Text className="text-[14px] font-semibold text-white">Back</Text>
+          <Text className="text-on-brand text-[14px] font-semibold">Back</Text>
         </Pressable>
       </SafeAreaView>
     );
@@ -134,7 +134,7 @@ export default function EventDetailScreen() {
         </View>
 
         <View className="px-5 pt-5">
-          <Text className="text-brand text-[11px] font-semibold tracking-[1.4px] uppercase">
+          <Text className="text-brand-ink text-[11px] font-semibold tracking-[1.4px] uppercase">
             {[event.district ?? 'Berlin', formatTime(event.starts_at)].join(' · ')}
           </Text>
           <Text className="text-ink mt-1.5 text-[26px] leading-[31px] font-semibold tracking-[-0.6px]">
@@ -157,7 +157,7 @@ export default function EventDetailScreen() {
                 onPress={() => void Linking.openURL(event.venue_homepage ?? '')}
                 className="mt-1.5 self-start active:opacity-70"
               >
-                <Text className="text-brand text-[12.5px] font-semibold">Open website</Text>
+                <Text className="text-brand-ink text-[12.5px] font-semibold">Open website</Text>
               </Pressable>
             ) : null}
           </View>
@@ -180,23 +180,23 @@ export default function EventDetailScreen() {
 
         <View className="border-line mx-5 mt-5 border-t">
           <InfoRow
-            icon={<Clock color={palette.brand} size={15} />}
+            icon={<Clock color={palette.brandInk} size={15} />}
             label="When"
             value={timeValue}
           />
           <InfoRow
-            icon={<MapPin color={palette.brand} size={15} />}
+            icon={<MapPin color={palette.brandInk} size={15} />}
             label="Where"
             value={[event.venue_name, event.district].filter(Boolean).join(' · ') || 'Berlin'}
           />
           <InfoRow
-            icon={<Ticket color={palette.brand} size={15} />}
+            icon={<Ticket color={palette.brandInk} size={15} />}
             label="Entry"
             value={formatPrice(event.price_min, event.price_max, event.is_free) ?? 'Not stated'}
           />
           {lineup.length ? (
             <InfoRow
-              icon={<Text className="text-brand text-[10px] font-bold">DJ</Text>}
+              icon={<Text className="text-brand-ink text-[10px] font-bold">DJ</Text>}
               label="Line-up"
               value={lineup.join(', ')}
             />
@@ -208,7 +208,7 @@ export default function EventDetailScreen() {
             <ActionButton
               primary
               label="Tickets & info"
-              icon={<ExternalLink color="#FFFFFF" size={16} />}
+              icon={<ExternalLink color={palette.onBrand} size={16} />}
               onPress={() => void Linking.openURL(ticketUrl)}
             />
           ) : null}

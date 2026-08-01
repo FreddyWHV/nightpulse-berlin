@@ -3,6 +3,7 @@ import { Pressable, Text, View } from 'react-native';
 import { Button, BottomSheet } from 'heroui-native';
 import { Check } from 'lucide-react-native';
 
+import { palette } from '@/lib/colors';
 import { VIBES } from '@/lib/taxonomy';
 import { cn } from '@/lib/utils';
 
@@ -34,7 +35,7 @@ function OptionRow({
       className="border-line flex-row items-center gap-3 border-b py-3.5 active:opacity-60"
     >
       <View className="flex-1">
-        <Text className={cn('text-[15px] font-semibold', selected ? 'text-brand' : 'text-ink')}>
+        <Text className={cn('text-[15px] font-semibold', selected ? 'text-brand-ink' : 'text-ink')}>
           {label}
         </Text>
         <Text className="text-ink-soft mt-0.5 text-[12.5px]">{hint}</Text>
@@ -45,7 +46,7 @@ function OptionRow({
           selected ? 'border-brand bg-brand' : 'border-line-strong bg-card',
         )}
       >
-        {selected ? <Check color="#FFFFFF" size={14} /> : null}
+        {selected ? <Check color={palette.onBrand} size={14} /> : null}
       </View>
     </Pressable>
   );

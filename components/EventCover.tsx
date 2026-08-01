@@ -76,7 +76,7 @@ export function EventCover({
       {hasPhoto ? null : (
         <>
           <LinearGradient
-            colors={['rgba(74,0,38,0.35)', 'rgba(74,0,38,0.82)']}
+            colors={['rgba(0,59,29,0.35)', 'rgba(0,59,29,0.82)']}
             start={{ x: 0, y: 0 }}
             end={{ x: 0.6, y: 1 }}
             className="absolute inset-0"

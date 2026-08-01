@@ -13,7 +13,11 @@ interface PulseLogoProps {
 /**
  * The NightPulse mark: a radar — solid core with rings travelling outwards.
  */
-export function PulseLogo({ size = 22, color = palette.brand, strokeWidth = 1.7 }: PulseLogoProps) {
+export function PulseLogo({
+  size = 22,
+  color = palette.brandInk,
+  strokeWidth = 1.7,
+}: PulseLogoProps) {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24">
       <Circle
@@ -51,7 +55,7 @@ export function PulseLogo({ size = 22, color = palette.brand, strokeWidth = 1.7 
 interface PulseBadgeProps {
   /** Diameter of the round badge. */
   size?: number;
-  /** `tint` = pink mark on a light tint, `solid` = white mark on pink. */
+  /** `tint` = mint mark on a light tint, `solid` = dark mark on mint. */
   tone?: 'tint' | 'solid';
   className?: string;
 }
@@ -70,7 +74,7 @@ export function PulseBadge({ size = 36, tone = 'tint', className }: PulseBadgePr
     >
       <PulseLogo
         size={size * 0.66}
-        color={solid ? '#FFFFFF' : palette.brand}
+        color={solid ? palette.onBrand : palette.brandInk}
         strokeWidth={solid ? 1.9 : 1.7}
       />
     </View>

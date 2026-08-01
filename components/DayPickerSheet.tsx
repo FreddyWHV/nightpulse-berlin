@@ -109,7 +109,7 @@ export function DayPickerSheet({
                       <Text
                         className={cn(
                           'text-[13px] font-semibold',
-                          selected ? 'text-white' : 'text-ink',
+                          selected ? 'text-on-brand' : 'text-ink',
                         )}
                       >
                         {option.label}
@@ -170,7 +170,7 @@ export function DayPickerSheet({
                               className={cn(
                                 'text-[15px]',
                                 selected
-                                  ? 'font-semibold text-white'
+                                  ? 'text-on-brand font-semibold'
                                   : selectable
                                     ? 'text-ink font-medium'
                                     : 'text-ink-faint',
@@ -183,7 +183,7 @@ export function DayPickerSheet({
                                 <View
                                   className={cn(
                                     'h-1 w-1 rounded-full',
-                                    selected ? 'bg-white' : 'bg-brand',
+                                    selected ? 'bg-on-brand' : 'bg-brand-ink',
                                   )}
                                 />
                               ) : null}

@@ -44,7 +44,7 @@ export function OrganizerBadge({
           style={{ width: size, height: size, borderRadius: size / 2 }}
           className="bg-brand-tint border-brand-tint-strong items-center justify-center border"
         >
-          <Text style={{ fontSize: size * 0.42 }} className="text-brand font-semibold">
+          <Text style={{ fontSize: size * 0.42 }} className="text-brand-ink font-semibold">
             {monogram(name)}
           </Text>
         </View>

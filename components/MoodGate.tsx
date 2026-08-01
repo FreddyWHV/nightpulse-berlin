@@ -15,6 +15,7 @@ import {
 import { PulseLogo } from '@/components/PulseLogo';
 import { SelectChip } from '@/components/SelectChip';
 import { AnimatedView } from '@/components/ui/primitives/AnimatedView';
+import { palette } from '@/lib/colors';
 import { useFilterStore } from '@/lib/filterStore';
 import { VIBES } from '@/lib/taxonomy';
 
@@ -118,19 +119,19 @@ export function MoodGate() {
             ]}
             className="bg-brand items-center justify-center"
           >
-            <PulseLogo size={CORE_SIZE * 0.62} color="#FFFFFF" strokeWidth={1.9} />
+            <PulseLogo size={CORE_SIZE * 0.62} color={palette.onBrand} strokeWidth={1.9} />
           </AnimatedView>
         </View>
 
-        <Text className="text-brand text-[11px] font-semibold tracking-[1.6px] uppercase">
+        <Text className="text-brand-ink text-[11px] font-semibold tracking-[1.6px] uppercase">
           NightPulse Berlin
         </Text>
         <Text className="text-ink mt-2 text-center text-[28px] leading-[33px] font-semibold tracking-[-0.7px]">
-          How are we feeling today?
+          What are you up for today?
         </Text>
         <Text className="text-ink-soft mt-2 max-w-[320px] text-center text-[14px] leading-[20px]">
-          Pick what you are up for tonight. Your music taste stays in your profile — this is just
-          about the mood.
+          Pick tonight&apos;s mood. Your music taste stays in your profile — this is just about how
+          you feel.
         </Text>
 
         <View className="mt-7 w-full flex-row flex-wrap justify-center gap-2">

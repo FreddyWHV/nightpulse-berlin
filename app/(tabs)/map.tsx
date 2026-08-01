@@ -6,6 +6,7 @@ import { X } from 'lucide-react-native';
 import { DayPickerSheet } from '@/components/DayPickerSheet';
 import { EventCard } from '@/components/EventCard';
 import { FilterHeader } from '@/components/FilterHeader';
+import { useTabBarClearance } from '@/components/FloatingTabBar';
 import { VibePickerSheet } from '@/components/VibePickerSheet';
 import MapView, { type MapMarker } from '@/components/MapView';
 import { SafeAreaView } from '@/components/ui/primitives/SafeAreaView';
@@ -85,6 +86,7 @@ export default function MapScreen() {
   const [dateOpen, setDateOpen] = useState(false);
   const [vibeOpen, setVibeOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const tabBarClearance = useTabBarClearance();
 
   const groups = useMemo(
     () => groupByVenue([...ranked.recommended, ...ranked.others]),
@@ -155,9 +157,10 @@ export default function MapScreen() {
 
         {active ? (
           <View
-            className="bg-card absolute right-0 bottom-0 left-0 rounded-t-3xl px-5 pt-4 pb-5"
+            className="bg-card absolute right-0 bottom-0 left-0 rounded-t-3xl px-5 pt-4"
             style={{
-              shadowColor: '#1A1418',
+              paddingBottom: tabBarClearance,
+              shadowColor: palette.ink,
               shadowOpacity: 0.12,
               shadowRadius: 18,
               shadowOffset: { width: 0, height: -6 },
@@ -214,7 +217,10 @@ export default function MapScreen() {
             </ScrollView>
           </View>
         ) : (
-          <View className="absolute right-0 bottom-5 left-0 items-center">
+          <View
+            className="absolute right-0 left-0 items-center"
+            style={{ bottom: tabBarClearance }}
+          >
             <View className="border-line bg-card/95 rounded-full border px-3.5 py-2">
               <Text className="text-ink-soft text-[12px] font-medium">
                 Tap a pin to see what is on

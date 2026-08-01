@@ -44,11 +44,11 @@ function FilterButton({
       {icon}
       <Text
         numberOfLines={1}
-        className={cn('flex-1 text-[13px] font-semibold', active ? 'text-brand' : 'text-ink')}
+        className={cn('flex-1 text-[13px] font-semibold', active ? 'text-brand-ink' : 'text-ink')}
       >
         {label}
       </Text>
-      <ChevronDown color={active ? palette.brand : palette.inkFaint} size={14} />
+      <ChevronDown color={active ? palette.brandInk : palette.inkFaint} size={14} />
     </Pressable>
   );
 }
@@ -71,7 +71,7 @@ export function FilterHeader({
     <View className="border-line bg-canvas border-b px-5 pt-1 pb-3.5">
       <View className="flex-row items-center justify-between">
         <View className="flex-1 pr-3">
-          <Text className="text-brand text-[11px] font-semibold tracking-[1.4px] uppercase">
+          <Text className="text-brand-ink text-[11px] font-semibold tracking-[1.4px] uppercase">
             NightPulse Berlin
           </Text>
           <Text
@@ -96,7 +96,7 @@ export function FilterHeader({
           accessibilityLabel="Pick a date"
         />
         <FilterButton
-          icon={<SlidersHorizontal color={vibeActive ? palette.brand : palette.ink} size={15} />}
+          icon={<SlidersHorizontal color={vibeActive ? palette.brandInk : palette.ink} size={15} />}
           label={vibeLabel}
           active={vibeActive}
           onPress={onPressVibe}

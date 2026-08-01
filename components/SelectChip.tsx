@@ -12,7 +12,7 @@ interface SelectChipProps {
 
 /**
  * Single pill used for interests, vibes and districts.
- * Selected state is the only place brand violet appears in dense lists.
+ * Selected state is the only place the signal colour appears in dense lists.
  */
 export function SelectChip({ label, hint, selected, onPress, size = 'md' }: SelectChipProps) {
   return (
@@ -30,13 +30,15 @@ export function SelectChip({ label, hint, selected, onPress, size = 'md' }: Sele
         className={cn(
           'font-medium',
           size === 'sm' ? 'text-[13px]' : 'text-[14px]',
-          selected ? 'text-white' : 'text-ink',
+          selected ? 'text-on-brand' : 'text-ink',
         )}
       >
         {label}
       </Text>
       {hint ? (
-        <Text className={cn('mt-0.5 text-[11px]', selected ? 'text-white/75' : 'text-ink-faint')}>
+        <Text
+          className={cn('mt-0.5 text-[11px]', selected ? 'text-on-brand/75' : 'text-ink-faint')}
+        >
           {hint}
         </Text>
       ) : null}

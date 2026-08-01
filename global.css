@@ -9,20 +9,22 @@
  * NightPulse Berlin — brand tokens.
  *
  * HeroUI semantic overrides live inside the Uniwind theme variants so that both
- * web and native resolve the same pink accent instead of HeroUI's default blue.
- * Signal colour: #FF0085 -> oklch(0.6468 0.2616 0.9).
+ * web and native resolve the same mint accent instead of HeroUI's default blue.
+ * Signal colour: #00DD8A -> oklch(0.7902 0.1872 157.7). It is a light colour, so
+ * anything sitting on top of it uses the near-black `on-brand` ink, and brand
+ * coloured text on light backgrounds uses the darker `brand-ink`.
  */
 @layer theme {
   :root {
     @variant light {
-      --accent: oklch(0.6468 0.2616 0.9);
-      --accent-foreground: oklch(0.99 0 0);
+      --accent: oklch(0.7902 0.1872 157.7);
+      --accent-foreground: oklch(0.24 0.045 160);
       --focus: var(--accent);
     }
 
     @variant dark {
-      --accent: oklch(0.6468 0.2616 0.9);
-      --accent-foreground: oklch(0.99 0 0);
+      --accent: oklch(0.7902 0.1872 157.7);
+      --accent-foreground: oklch(0.24 0.045 160);
       --focus: var(--accent);
     }
   }
@@ -30,18 +32,20 @@
 
 /* Product palette exposed as bg-*, text-*, border-* utilities. */
 @theme {
-  --color-canvas: oklch(0.985 0.004 350);
+  --color-canvas: oklch(0.985 0.005 158);
   --color-card: oklch(1 0 0);
-  --color-surface: oklch(0.963 0.007 350);
-  --color-ink: oklch(0.19 0.018 350);
-  --color-ink-soft: oklch(0.53 0.016 350);
-  --color-ink-faint: oklch(0.66 0.014 350);
-  --color-line: oklch(0.932 0.006 350);
-  --color-line-strong: oklch(0.885 0.01 350);
-  --color-brand: oklch(0.6468 0.2616 0.9);
-  --color-brand-deep: oklch(0.3 0.14 5);
-  --color-brand-tint: oklch(0.965 0.022 355);
-  --color-brand-tint-strong: oklch(0.9 0.07 358);
+  --color-surface: oklch(0.963 0.008 158);
+  --color-ink: oklch(0.19 0.018 158);
+  --color-ink-soft: oklch(0.53 0.016 158);
+  --color-ink-faint: oklch(0.66 0.014 158);
+  --color-line: oklch(0.932 0.007 158);
+  --color-line-strong: oklch(0.885 0.011 158);
+  --color-brand: oklch(0.7902 0.1872 157.7);
+  --color-brand-ink: oklch(0.52 0.13 160);
+  --color-on-brand: oklch(0.24 0.045 160);
+  --color-brand-deep: oklch(0.3 0.09 160);
+  --color-brand-tint: oklch(0.965 0.03 160);
+  --color-brand-tint-strong: oklch(0.9 0.08 162);
 }
 
 @source './node_modules/heroui-native/lib';

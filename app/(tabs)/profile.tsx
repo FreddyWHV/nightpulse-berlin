@@ -13,6 +13,7 @@ import { RotateCcw } from 'lucide-react-native';
 import { PulseBadge } from '@/components/PulseLogo';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { SelectChip } from '@/components/SelectChip';
+import { useTabBarClearance } from '@/components/FloatingTabBar';
 import { SafeAreaView } from '@/components/ui/primitives/SafeAreaView';
 import { palette } from '@/lib/colors';
 import { useProfileStore } from '@/lib/profileStore';
@@ -60,6 +61,8 @@ export default function ProfileScreen() {
   const setFreeOnly = useProfileStore((state) => state.setFreeOnly);
   const reset = useProfileStore((state) => state.reset);
 
+  const tabBarClearance = useTabBarClearance();
+
   const summary = [
     genres.length
       ? `${genres.length} ${genres.length === 1 ? 'genre' : 'genres'}`
@@ -71,7 +74,7 @@ export default function ProfileScreen() {
   if (!hydrated) {
     return (
       <SafeAreaView edges={['top']} className="bg-canvas flex-1 items-center justify-center">
-        <ActivityIndicator color={palette.brand} />
+        <ActivityIndicator color={palette.brandInk} />
       </SafeAreaView>
     );
   }
@@ -83,7 +86,7 @@ export default function ProfileScreen() {
         className="flex-1"
       >
         <ScrollView
-          contentContainerStyle={{ paddingBottom: 48 }}
+          contentContainerStyle={{ paddingBottom: tabBarClearance + 16 }}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >

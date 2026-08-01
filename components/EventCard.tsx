@@ -56,7 +56,7 @@ export function EventCard({ item, onPress, highlight = false, compact = false }:
         <View className="flex-row items-center gap-1.5">
           {highlight ? (
             <>
-              <Text className="text-brand text-[12px] font-semibold">For you</Text>
+              <Text className="text-brand-ink text-[12px] font-semibold">For you</Text>
               <View className="bg-line-strong h-[3px] w-[3px] rounded-full" />
             </>
           ) : null}

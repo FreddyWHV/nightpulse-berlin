@@ -6,6 +6,7 @@ import { ChevronRight } from 'lucide-react-native';
 import { DayPickerSheet } from '@/components/DayPickerSheet';
 import { EventCard } from '@/components/EventCard';
 import { FilterHeader } from '@/components/FilterHeader';
+import { useTabBarClearance } from '@/components/FloatingTabBar';
 import { VibePickerSheet } from '@/components/VibePickerSheet';
 import { SafeAreaView } from '@/components/ui/primitives/SafeAreaView';
 import { useNightFilter } from '@/hooks/useNightFilter';
@@ -41,6 +42,7 @@ export default function FeedScreen() {
 
   const [dateOpen, setDateOpen] = useState(false);
   const [vibeOpen, setVibeOpen] = useState(false);
+  const tabBarClearance = useTabBarClearance();
 
   const rows = useMemo<FeedRow[]>(() => {
     const result: FeedRow[] = [];
@@ -120,7 +122,7 @@ export default function FeedScreen() {
       <FlatList
         data={rows}
         keyExtractor={(row) => row.key}
-        contentContainerStyle={{ paddingBottom: 36 }}
+        contentContainerStyle={{ paddingBottom: tabBarClearance + 12 }}
         showsVerticalScrollIndicator={false}
         refreshing={isRefetching}
         onRefresh={() => void refetch()}
@@ -138,13 +140,13 @@ export default function FeedScreen() {
                     Set your music taste in the profile — the feed ranks by it.
                   </Text>
                 </View>
-                <ChevronRight color={palette.brand} size={18} />
+                <ChevronRight color={palette.brandInk} size={18} />
               </Pressable>
             )}
 
             {isPending ? (
               <View className="items-center py-12">
-                <ActivityIndicator color={palette.brand} />
+                <ActivityIndicator color={palette.brandInk} />
               </View>
             ) : null}
           </View>
