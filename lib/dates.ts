@@ -1,5 +1,47 @@
 import { addDays, format, isSameDay, startOfDay } from 'date-fns';
-import { de } from 'date-fns/locale';
+
+/**
+ * German labels are kept local on purpose: importing `date-fns/locale` pulls in
+ * every locale of the package and breaks Metro's web bundle.
+ */
+const WEEKDAYS_SHORT = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'] as const;
+const WEEKDAYS_LONG = [
+  'Sonntag',
+  'Montag',
+  'Dienstag',
+  'Mittwoch',
+  'Donnerstag',
+  'Freitag',
+  'Samstag',
+] as const;
+const MONTHS_SHORT = [
+  'Jan',
+  'Feb',
+  'Mär',
+  'Apr',
+  'Mai',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Okt',
+  'Nov',
+  'Dez',
+] as const;
+const MONTHS_LONG = [
+  'Januar',
+  'Februar',
+  'März',
+  'April',
+  'Mai',
+  'Juni',
+  'Juli',
+  'August',
+  'September',
+  'Oktober',
+  'November',
+  'Dezember',
+] as const;
 
 /**
  * Nightlife days do not end at midnight. A party starting at 02:00 on Sunday
@@ -41,7 +83,7 @@ export function buildDayOptions(count = 14, from: Date = new Date()): DayOption[
   return Array.from({ length: count }, (_, index) => {
     const date = addDays(today, index);
     const weekday = date.getDay();
-    let label = format(date, 'EEEEEE', { locale: de });
+    let label: string = WEEKDAYS_SHORT[weekday];
     if (isSameDay(date, today)) label = 'Heute';
     else if (isSameDay(date, addDays(today, 1))) label = 'Morgen';
 
@@ -49,8 +91,8 @@ export function buildDayOptions(count = 14, from: Date = new Date()): DayOption[
       key: dayKey(date),
       date,
       label,
-      dayNumber: format(date, 'd'),
-      month: format(date, 'MMM', { locale: de }),
+      dayNumber: String(date.getDate()),
+      month: MONTHS_SHORT[date.getMonth()],
       isWeekend: weekday === 5 || weekday === 6,
     };
   });
@@ -60,7 +102,7 @@ export function formatDayHeadline(date: Date): string {
   const today = startOfDay(new Date());
   if (isSameDay(date, today)) return 'Heute Abend';
   if (isSameDay(date, addDays(today, 1))) return 'Morgen Abend';
-  return format(date, 'EEEE, d. MMMM', { locale: de });
+  return `${WEEKDAYS_LONG[date.getDay()]}, ${date.getDate()}. ${MONTHS_LONG[date.getMonth()]}`;
 }
 
 export function formatTime(timestamp: string): string {
@@ -68,7 +110,8 @@ export function formatTime(timestamp: string): string {
 }
 
 export function formatDateTime(timestamp: string): string {
-  return format(new Date(timestamp), 'EEEE, d. MMM · HH:mm', { locale: de });
+  const date = new Date(timestamp);
+  return `${WEEKDAYS_LONG[date.getDay()]}, ${date.getDate()}. ${MONTHS_SHORT[date.getMonth()]} · ${format(date, 'HH:mm')}`;
 }
 
 export function formatPrice(
