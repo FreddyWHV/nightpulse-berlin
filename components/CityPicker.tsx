@@ -1,12 +1,14 @@
-import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
-import { Popover } from 'heroui-native';
+import { useCallback, useRef, useState } from 'react';
+import { Modal, Pressable, Text, View, useWindowDimensions } from 'react-native';
 
 import { Path, Svg } from '@/components/ui/primitives/Svg';
 import { CITIES, cityById } from '@/lib/cities';
 import { palette } from '@/lib/colors';
 import { useFilterStore } from '@/lib/filterStore';
 import { cn } from '@/lib/utils';
+
+const MENU_WIDTH = 190;
+const EDGE_GAP = 12;
 
 /** Barely-there hint that the city can be changed. */
 function DropdownCaret() {
@@ -25,77 +27,117 @@ interface CityPickerProps {
 
 /**
  * The city part of the headline: "NIGHTPULSE in <city>". The city itself is the
- * trigger — tapping it opens a quiet dropdown with the other cities. The only
- * affordance is a small caret tucked under the word.
+ * trigger — tapping it opens a quiet dropdown with the other cities. The menu is
+ * anchored by measuring the word instead of using a popover primitive, so the
+ * tap works the same on web and on device.
  */
 export function CityPicker({ fontSize, lineHeight }: CityPickerProps) {
   const cityId = useFilterStore((state) => state.cityId);
   const setCity = useFilterStore((state) => state.setCity);
   const city = cityById(cityId);
 
-  const [open, setOpen] = useState(false);
+  const { width: windowWidth } = useWindowDimensions();
+  const triggerRef = useRef<View | null>(null);
+  const [anchor, setAnchor] = useState<{ top: number; left: number } | null>(null);
+
+  const open = useCallback(() => {
+    const node = triggerRef.current;
+    if (!node) return;
+
+    node.measureInWindow((x, y, width, height) => {
+      const maxLeft = Math.max(EDGE_GAP, windowWidth - MENU_WIDTH - EDGE_GAP);
+      setAnchor({
+        top: y + (height || lineHeight) + 6,
+        left: Math.min(Math.max(x, EDGE_GAP), maxLeft),
+      });
+    });
+  }, [lineHeight, windowWidth]);
 
   return (
-    <Popover isOpen={open} onOpenChange={setOpen}>
-      <Popover.Trigger asChild>
+    <>
+      <Pressable
+        ref={triggerRef}
+        accessibilityRole="button"
+        accessibilityLabel={`City: ${city.name}. Change city`}
+        hitSlop={8}
+        onPress={open}
+        className="active:opacity-60"
+      >
+        <Text
+          numberOfLines={1}
+          className="text-brand-ink font-semibold tracking-[-0.6px]"
+          style={{ fontSize, lineHeight }}
+        >
+          {city.name}
+        </Text>
+        <View className="mt-[1px] flex-row justify-end pr-[1px]">
+          <DropdownCaret />
+        </View>
+      </Pressable>
+
+      <Modal
+        visible={anchor !== null}
+        transparent
+        animationType="fade"
+        statusBarTranslucent
+        onRequestClose={() => setAnchor(null)}
+      >
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={`City: ${city.name}. Change city`}
-          className="active:opacity-60"
+          accessibilityLabel="Close city list"
+          onPress={() => setAnchor(null)}
+          style={{ flex: 1 }}
         >
-          <Text
-            numberOfLines={1}
-            className="text-brand-ink font-semibold tracking-[-0.6px]"
-            style={{ fontSize, lineHeight }}
-          >
-            {city.name}
-          </Text>
-          <View className="mt-[1px] flex-row justify-end pr-[1px]">
-            <DropdownCaret />
-          </View>
+          {anchor ? (
+            <View
+              className="border-line bg-card absolute rounded-2xl border p-1.5"
+              style={{
+                top: anchor.top,
+                left: anchor.left,
+                width: MENU_WIDTH,
+                shadowColor: palette.ink,
+                shadowOpacity: 0.14,
+                shadowRadius: 18,
+                shadowOffset: { width: 0, height: 8 },
+                elevation: 12,
+              }}
+            >
+              {CITIES.map((entry) => {
+                const selected = entry.id === city.id;
+                return (
+                  <Pressable
+                    key={entry.id}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected }}
+                    onPress={() => {
+                      setCity(entry.id);
+                      setAnchor(null);
+                    }}
+                    className={cn(
+                      'flex-row items-center gap-2 rounded-xl px-2.5 py-2.5 active:opacity-60',
+                      selected && 'bg-brand-tint',
+                    )}
+                  >
+                    <Text
+                      className={cn(
+                        'flex-1 text-[15px]',
+                        selected ? 'text-brand-ink font-semibold' : 'text-ink font-medium',
+                      )}
+                    >
+                      {entry.name}
+                    </Text>
+                    {entry.hasListings ? null : (
+                      <Text className="text-ink-faint text-[11px] font-medium tracking-[0.6px] uppercase">
+                        Soon
+                      </Text>
+                    )}
+                  </Pressable>
+                );
+              })}
+            </View>
+          ) : null}
         </Pressable>
-      </Popover.Trigger>
-      <Popover.Portal>
-        <Popover.Overlay />
-        <Popover.Content
-          presentation="popover"
-          placement="bottom"
-          align="start"
-          offset={4}
-          width={186}
-          className="px-1.5 py-1.5"
-        >
-          {CITIES.map((entry) => {
-            const selected = entry.id === city.id;
-            return (
-              <Pressable
-                key={entry.id}
-                accessibilityRole="button"
-                accessibilityState={{ selected }}
-                onPress={() => {
-                  setCity(entry.id);
-                  setOpen(false);
-                }}
-                className="flex-row items-center gap-2 rounded-xl px-2.5 py-2 active:opacity-60"
-              >
-                <Text
-                  className={cn(
-                    'flex-1 text-[15px]',
-                    selected ? 'text-brand-ink font-semibold' : 'text-ink font-medium',
-                  )}
-                >
-                  {entry.name}
-                </Text>
-                {entry.hasListings ? null : (
-                  <Text className="text-ink-faint text-[11px] font-medium tracking-[0.6px] uppercase">
-                    Soon
-                  </Text>
-                )}
-              </Pressable>
-            );
-          })}
-        </Popover.Content>
-      </Popover.Portal>
-    </Popover>
+      </Modal>
+    </>
   );
 }

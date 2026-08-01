@@ -1,5 +1,5 @@
 import { Pressable, Text, View } from 'react-native';
-import { CalendarDays, ChevronDown, SlidersHorizontal } from 'lucide-react-native';
+import { CalendarDays, SlidersHorizontal } from 'lucide-react-native';
 
 import { CityPicker } from '@/components/CityPicker';
 import { PulseBadge } from '@/components/PulseLogo';
@@ -20,15 +20,14 @@ interface FilterHeaderProps {
   onPressVibe: () => void;
 }
 
-function FilterButton({
+/** Icon-only filter trigger — the selection itself is spelled out in the meta line. */
+function FilterIconButton({
   icon,
-  label,
   active,
   onPress,
   accessibilityLabel,
 }: {
   icon: React.ReactNode;
-  label: string;
   active: boolean;
   onPress: () => void;
   accessibilityLabel: string;
@@ -37,28 +36,23 @@ function FilterButton({
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
+      hitSlop={6}
       onPress={onPress}
       className={cn(
-        'flex-1 flex-row items-center gap-2 rounded-full border px-3.5 py-2.5 active:opacity-70',
+        'h-9 w-9 items-center justify-center rounded-full border active:opacity-70',
         active ? 'border-brand-tint-strong bg-brand-tint' : 'border-line bg-card',
       )}
     >
       {icon}
-      <Text
-        numberOfLines={1}
-        className={cn('flex-1 text-[13px] font-semibold', active ? 'text-brand-ink' : 'text-ink')}
-      >
-        {label}
-      </Text>
-      <ChevronDown color={active ? palette.brandInk : palette.inkFaint} size={14} />
     </Pressable>
   );
 }
 
 /**
- * Fixed top bar shared by feed and map: headline with the city switcher, logo
- * and the two filter buttons. Both screens render it with identical geometry so
- * nothing moves when switching tabs.
+ * Fixed top bar shared by feed and map: headline with the city switcher, logo and
+ * a single meta line that carries date, vibe and counts next to two small filter
+ * icons. Both screens render it with identical geometry so nothing moves when
+ * switching tabs.
  */
 export function FilterHeader({
   caption,
@@ -68,44 +62,42 @@ export function FilterHeader({
   onPressDate,
   onPressVibe,
 }: FilterHeaderProps) {
+  const metaLine = [dateLabel, vibeActive ? vibeLabel : null, caption].filter(Boolean).join(' · ');
+
   return (
-    <View className="border-line bg-canvas border-b px-5 pt-2 pb-3.5">
+    <View className="border-line bg-canvas border-b px-5 pt-2 pb-3">
       <View className="flex-row items-start justify-between">
-        <View className="flex-1 pr-3">
-          <View className="flex-row items-start gap-1.5">
-            <Text
-              numberOfLines={1}
-              className="text-ink font-semibold tracking-[-0.6px]"
-              style={{ fontSize: HEADLINE_SIZE, lineHeight: HEADLINE_LINE }}
-            >
-              NIGHTPULSE in
-            </Text>
-            {/* Shrinks first on very narrow screens so the wordmark stays whole. */}
-            <View className="shrink">
-              <CityPicker fontSize={HEADLINE_SIZE} lineHeight={HEADLINE_LINE} />
-            </View>
-          </View>
-          <Text numberOfLines={1} className="text-ink-soft mt-0.5 text-[13px]">
-            {caption}
+        <View className="flex-1 flex-row items-start gap-1.5 pr-3">
+          <Text
+            numberOfLines={1}
+            className="text-ink font-semibold tracking-[-0.6px]"
+            style={{ fontSize: HEADLINE_SIZE, lineHeight: HEADLINE_LINE }}
+          >
+            NIGHTPULSE in
           </Text>
+          {/* Shrinks first on very narrow screens so the wordmark stays whole. */}
+          <View className="shrink">
+            <CityPicker fontSize={HEADLINE_SIZE} lineHeight={HEADLINE_LINE} />
+          </View>
         </View>
         <PulseBadge size={40} />
       </View>
 
-      <View className="mt-3 flex-row gap-2">
-        <FilterButton
-          icon={<CalendarDays color={palette.ink} size={15} />}
-          label={dateLabel}
+      <View className="mt-1 flex-row items-center gap-2">
+        <Text numberOfLines={1} className="text-ink-soft flex-1 pr-1 text-[13px]">
+          {metaLine}
+        </Text>
+        <FilterIconButton
+          icon={<CalendarDays color={palette.ink} size={16} />}
           active={false}
           onPress={onPressDate}
-          accessibilityLabel="Pick a date"
+          accessibilityLabel={`Date: ${dateLabel}. Pick a date`}
         />
-        <FilterButton
-          icon={<SlidersHorizontal color={vibeActive ? palette.brandInk : palette.ink} size={15} />}
-          label={vibeLabel}
+        <FilterIconButton
+          icon={<SlidersHorizontal color={vibeActive ? palette.brandInk : palette.ink} size={16} />}
           active={vibeActive}
           onPress={onPressVibe}
-          accessibilityLabel="Pick a vibe"
+          accessibilityLabel={`Vibe: ${vibeLabel}. Pick a vibe`}
         />
       </View>
     </View>
