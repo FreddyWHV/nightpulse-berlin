@@ -79,7 +79,7 @@ export default function ProfileScreen() {
             }
           />
 
-          <View className="border-line bg-card mx-5 flex-row gap-2 rounded-2xl border p-4">
+          <View className="border-line bg-card mx-5 flex-row gap-2 rounded-3xl border p-4">
             {[
               { label: 'Interessen', value: interests.length },
               { label: 'Vibes', value: vibes.length },
@@ -173,7 +173,7 @@ export default function ProfileScreen() {
               ))}
             </View>
 
-            <View className="border-line bg-card mt-4 flex-row items-center justify-between rounded-2xl border px-4 py-3.5">
+            <View className="border-line bg-card mt-4 flex-row items-center justify-between rounded-3xl border px-4 py-3.5">
               <View className="flex-1 pr-3">
                 <Text className="text-ink text-[14px] font-semibold">Nur kostenlose Events</Text>
                 <Text className="text-ink-soft mt-0.5 text-[12px]">

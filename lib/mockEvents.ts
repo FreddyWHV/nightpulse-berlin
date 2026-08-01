@@ -652,6 +652,10 @@ export function buildMockEvents(from: Date = new Date(), days = 21): EventRow[] 
         status: 'active',
         latitude: template.lat,
         longitude: template.lng,
+        image_source: null,
+        organizer_name: template.venue,
+        organizer_image_url: null,
+        organizer_type: 'venue',
       });
     }
   }

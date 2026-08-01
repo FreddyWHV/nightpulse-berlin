@@ -3,8 +3,9 @@ import { Linking, Platform, Pressable, ScrollView, Text, View } from 'react-nati
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Clock, ExternalLink, MapPin, Ticket, X } from 'lucide-react-native';
 
+import { EventCover } from '@/components/EventCover';
+import { OrganizerBadge } from '@/components/OrganizerBadge';
 import MapView from '@/components/MapView';
-import { LinearGradient } from '@/components/ui/primitives/LinearGradient';
 import { SafeAreaView } from '@/components/ui/primitives/SafeAreaView';
 import { useEventFeed } from '@/hooks/useEvents';
 import { palette } from '@/lib/colors';
@@ -54,8 +55,8 @@ function ActionButton({
       onPress={onPress}
       className={
         primary
-          ? 'bg-brand flex-1 flex-row items-center justify-center gap-2 rounded-xl px-4 py-3.5 active:opacity-80'
-          : 'border-line bg-card flex-1 flex-row items-center justify-center gap-2 rounded-xl border px-4 py-3.5 active:opacity-80'
+          ? 'bg-brand flex-1 flex-row items-center justify-center gap-2 rounded-2xl px-4 py-3.5 active:opacity-80'
+          : 'border-line bg-card flex-1 flex-row items-center justify-center gap-2 rounded-2xl border px-4 py-3.5 active:opacity-80'
       }
     >
       {icon}
@@ -86,7 +87,7 @@ export default function EventDetailScreen() {
         <Pressable
           onPress={() => router.back()}
           accessibilityRole="button"
-          className="bg-brand mt-4 rounded-xl px-5 py-3 active:opacity-80"
+          className="bg-brand mt-4 rounded-2xl px-5 py-3 active:opacity-80"
         >
           <Text className="text-[14px] font-semibold text-white">Zurück</Text>
         </Pressable>
@@ -94,10 +95,14 @@ export default function EventDetailScreen() {
     );
   }
 
-  const interestTags = resolveInterests(event.category).map((tag) => INTEREST_LABELS[tag] ?? tag);
-  const vibeTags = resolveVibes(event.vibe_tags).map((tag) => VIBE_LABELS[tag] ?? tag);
-  const tags = [...new Set([...interestTags, ...vibeTags])];
+  const tags = [
+    ...new Set([
+      ...resolveInterests(event.category).map((tag) => INTEREST_LABELS[tag] ?? tag),
+      ...resolveVibes(event.vibe_tags).map((tag) => VIBE_LABELS[tag] ?? tag),
+    ]),
+  ];
   const lineup = event.lineup?.filter(Boolean) ?? [];
+  const organizer = event.organizer_name ?? event.venue_name;
 
   const timeValue = event.ends_at
     ? `${formatDateTime(event.starts_at)} – ${formatTime(event.ends_at)}`
@@ -123,49 +128,70 @@ export default function EventDetailScreen() {
         contentContainerStyle={{ paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
       >
-        <LinearGradient
-          colors={[palette.brandDeep, palette.brand]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          className="pt-safe-offset-4 px-5 pb-7"
-        >
-          <View className="flex-row justify-end">
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Schließen"
-              onPress={() => router.back()}
-              className="h-9 w-9 items-center justify-center rounded-full bg-white/20 active:opacity-70"
-            >
-              <X color="#FFFFFF" size={18} />
-            </Pressable>
-          </View>
+        <View className="pt-safe-offset-3 px-4">
+          <EventCover event={event} height={220} rounded="rounded-3xl" monogramSize={34} />
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Schließen"
+            onPress={() => router.back()}
+            className="absolute top-3 right-3 h-9 w-9 items-center justify-center rounded-full bg-black/45 active:opacity-70"
+          >
+            <X color="#FFFFFF" size={18} />
+          </Pressable>
+          {event.image_source ? (
+            <Text className="text-ink-faint mt-1.5 px-1 text-[10.5px]">
+              Foto: {event.image_source}
+            </Text>
+          ) : null}
+        </View>
 
-          <Text className="mt-4 text-[12px] font-semibold tracking-[1.4px] text-white/70 uppercase">
-            {event.district ?? 'Berlin'}
+        <View className="px-5 pt-5">
+          <Text className="text-brand text-[11px] font-semibold tracking-[1.4px] uppercase">
+            {[event.district ?? 'Berlin', formatTime(event.starts_at)].join(' · ')}
           </Text>
-          <Text className="mt-1.5 text-[28px] leading-[33px] font-bold tracking-[-0.6px] text-white">
+          <Text className="text-ink mt-1.5 text-[26px] leading-[31px] font-semibold tracking-[-0.6px]">
             {event.title}
           </Text>
-          <Text className="mt-2 text-[15px] text-white/85">{event.venue_name ?? 'Berlin'}</Text>
-        </LinearGradient>
+
+          <View className="border-line bg-card mt-4 rounded-3xl border p-4">
+            <OrganizerBadge
+              name={organizer}
+              imageUrl={event.organizer_image_url}
+              size={38}
+              textClassName="text-ink text-[14px] font-semibold"
+            />
+            <Text className="text-ink-soft mt-2 text-[12.5px] leading-[18px]">
+              {[event.venue_name, event.address].filter(Boolean).join(', ') || 'Berlin'}
+            </Text>
+            {event.venue_homepage ? (
+              <Pressable
+                accessibilityRole="link"
+                onPress={() => void Linking.openURL(event.venue_homepage ?? '')}
+                className="mt-2 self-start active:opacity-70"
+              >
+                <Text className="text-brand text-[12.5px] font-semibold">Website öffnen</Text>
+              </Pressable>
+            ) : null}
+          </View>
+        </View>
 
         {tags.length ? (
-          <View className="flex-row flex-wrap gap-2 px-5 pt-5">
+          <View className="flex-row flex-wrap gap-2 px-5 pt-4">
             {tags.map((tag) => (
-              <View key={tag} className="bg-brand-tint rounded-full px-3 py-1.5">
-                <Text className="text-brand text-[12px] font-medium capitalize">{tag}</Text>
+              <View key={tag} className="bg-surface rounded-full px-3 py-1.5">
+                <Text className="text-ink-soft text-[12px] font-medium capitalize">{tag}</Text>
               </View>
             ))}
           </View>
         ) : null}
 
         {event.description_ours ? (
-          <Text className="text-ink-soft px-5 pt-5 text-[15px] leading-[23px]">
+          <Text className="text-ink-soft px-5 pt-4 text-[15px] leading-[23px]">
             {event.description_ours}
           </Text>
         ) : null}
 
-        <View className="border-line bg-card mx-5 mt-6 rounded-2xl border px-4 pt-1 pb-1">
+        <View className="border-line bg-card mx-5 mt-5 rounded-3xl border px-4">
           <InfoRow
             icon={<Clock color={palette.brand} size={14} />}
             label="Wann"
@@ -174,16 +200,14 @@ export default function EventDetailScreen() {
           <InfoRow
             icon={<MapPin color={palette.brand} size={14} />}
             label="Wo"
-            value={[event.venue_name, event.address].filter(Boolean).join(', ') || 'Berlin'}
+            value={[event.venue_name, event.district].filter(Boolean).join(' · ') || 'Berlin'}
           />
-          <View className="border-b-0">
-            <InfoRow
-              icon={<Ticket color={palette.brand} size={14} />}
-              label="Eintritt"
-              value={formatPrice(event.price_min, event.price_max, event.is_free)}
-              last={lineup.length === 0}
-            />
-          </View>
+          <InfoRow
+            icon={<Ticket color={palette.brand} size={14} />}
+            label="Eintritt"
+            value={formatPrice(event.price_min, event.price_max, event.is_free)}
+            last={lineup.length === 0}
+          />
           {lineup.length ? (
             <InfoRow
               icon={<Text className="text-brand text-[11px] font-bold">DJ</Text>}
@@ -211,7 +235,7 @@ export default function EventDetailScreen() {
         </View>
 
         {event.latitude != null && event.longitude != null ? (
-          <View className="border-line mx-5 mt-5 overflow-hidden rounded-2xl border">
+          <View className="border-line mx-5 mt-5 overflow-hidden rounded-3xl border">
             <MapView
               style={{ height: 180 }}
               initialRegion={{

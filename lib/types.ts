@@ -25,6 +25,14 @@ export interface EventRow {
   status: string | null;
   latitude: number | null;
   longitude: number | null;
+  /** Where `image_url` came from (credit line). */
+  image_source: string | null;
+  /** Name of the venue/promoter behind the event (`sources.name`). */
+  organizer_name: string | null;
+  /** Organiser photo or logo (`sources.image_url`). */
+  organizer_image_url: string | null;
+  /** `sources.type`, e.g. `venue`, `promoter`. */
+  organizer_type: string | null;
 }
 
 export interface ScoredEvent {

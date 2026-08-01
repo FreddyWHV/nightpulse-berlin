@@ -1,4 +1,4 @@
-import { addDays, format, isSameDay, startOfDay } from 'date-fns';
+import { addDays, endOfMonth, format, isSameDay, startOfDay, startOfMonth } from 'date-fns';
 
 /**
  * German labels are kept local on purpose: importing `date-fns/locale` pulls in
@@ -64,6 +64,14 @@ export function dayKey(date: Date): string {
   return format(date, 'yyyy-MM-dd');
 }
 
+/**
+ * Calendar day the night around `timestamp` started on. At 02:00 this still
+ * returns the previous evening, which is what people mean by "heute Nacht".
+ */
+export function nightDateOf(timestamp: Date = new Date()): Date {
+  return startOfDay(new Date(timestamp.getTime() - NIGHT_START_HOUR * 60 * 60 * 1000));
+}
+
 /** The night window (06:00 -> next day 06:00) for a given calendar day. */
 export function nightRange(date: Date): { start: Date; end: Date } {
   const start = startOfDay(date);
@@ -79,13 +87,13 @@ export function nightKeyOf(timestamp: string | Date): string {
 }
 
 export function buildDayOptions(count = 14, from: Date = new Date()): DayOption[] {
-  const today = startOfDay(from);
+  const first = nightDateOf(from);
   return Array.from({ length: count }, (_, index) => {
-    const date = addDays(today, index);
+    const date = addDays(first, index);
     const weekday = date.getDay();
     let label: string = WEEKDAYS_SHORT[weekday];
-    if (isSameDay(date, today)) label = 'Heute';
-    else if (isSameDay(date, addDays(today, 1))) label = 'Morgen';
+    if (index === 0) label = 'Heute';
+    else if (index === 1) label = 'Morgen';
 
     return {
       key: dayKey(date),
@@ -99,10 +107,70 @@ export function buildDayOptions(count = 14, from: Date = new Date()): DayOption[
 }
 
 export function formatDayHeadline(date: Date): string {
-  const today = startOfDay(new Date());
-  if (isSameDay(date, today)) return 'Heute Abend';
-  if (isSameDay(date, addDays(today, 1))) return 'Morgen Abend';
+  const tonight = nightDateOf();
+  if (isSameDay(date, tonight)) return 'Heute Abend';
+  if (isSameDay(date, addDays(tonight, 1))) return 'Morgen Abend';
   return `${WEEKDAYS_LONG[date.getDay()]}, ${date.getDate()}. ${MONTHS_LONG[date.getMonth()]}`;
+}
+
+/** Compact label for the date filter button: "Heute", "Morgen", "Sa, 4. Okt". */
+export function formatDayButton(date: Date): string {
+  const tonight = nightDateOf();
+  if (isSameDay(date, tonight)) return 'Heute';
+  if (isSameDay(date, addDays(tonight, 1))) return 'Morgen';
+  return `${WEEKDAYS_SHORT[date.getDay()]}, ${date.getDate()}. ${MONTHS_SHORT[date.getMonth()]}`;
+}
+
+export function formatMonthTitle(date: Date): string {
+  return `${MONTHS_LONG[date.getMonth()]} ${date.getFullYear()}`;
+}
+
+/** Monday-first weekday initials for calendar headers. */
+export const WEEKDAY_INITIALS = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'] as const;
+
+export interface CalendarCell {
+  /** Stable key for rendering. */
+  id: string;
+  /** `null` for the padding cells of the first and last week. */
+  date: Date | null;
+}
+
+export interface CalendarWeek {
+  id: string;
+  days: CalendarCell[];
+}
+
+/**
+ * Monday-first calendar grid for the month of `month`. Leading and trailing
+ * cells carry no date so the grid keeps its 7-column rhythm.
+ */
+export function buildMonthMatrix(month: Date): CalendarWeek[] {
+  const first = startOfMonth(month);
+  const total = endOfMonth(month).getDate();
+  const leading = (first.getDay() + 6) % 7;
+  const monthId = format(first, 'yyyy-MM');
+
+  const cells: (Date | null)[] = Array.from({ length: leading }, () => null);
+  for (let day = 0; day < total; day += 1) cells.push(addDays(first, day));
+  while (cells.length % 7 !== 0) cells.push(null);
+
+  const weeks: CalendarWeek[] = [];
+  for (let index = 0; index < cells.length; index += 7) {
+    const weekIndex = index / 7;
+    weeks.push({
+      id: `${monthId}-w${weekIndex}`,
+      days: cells.slice(index, index + 7).map((date, position) => ({
+        id: date ? dayKey(date) : `${monthId}-w${weekIndex}-p${position}`,
+        date,
+      })),
+    });
+  }
+  return weeks;
+}
+
+export function formatTimeRange(startsAt: string, endsAt: string | null): string {
+  const start = formatTime(startsAt);
+  return endsAt ? `${start} – ${formatTime(endsAt)}` : start;
 }
 
 export function formatTime(timestamp: string): string {

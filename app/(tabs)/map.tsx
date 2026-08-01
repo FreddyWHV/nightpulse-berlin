@@ -3,16 +3,15 @@ import { Pressable, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { X } from 'lucide-react-native';
 
-import { DateStrip } from '@/components/DateStrip';
+import { DayPickerSheet } from '@/components/DayPickerSheet';
 import { EventCard } from '@/components/EventCard';
-import { ScreenHeader } from '@/components/ScreenHeader';
+import { FilterHeader } from '@/components/FilterHeader';
+import { VibePickerSheet } from '@/components/VibePickerSheet';
 import MapView, { type MapMarker } from '@/components/MapView';
 import { SafeAreaView } from '@/components/ui/primitives/SafeAreaView';
-import { useEventFeed } from '@/hooks/useEvents';
+import { useNightFilter } from '@/hooks/useNightFilter';
 import { palette } from '@/lib/colors';
-import { buildDayOptions, nightKeyOf } from '@/lib/dates';
-import { useProfileStore } from '@/lib/profileStore';
-import { rankEvents } from '@/lib/recommend';
+import { useFilterStore } from '@/lib/filterStore';
 import type { ScoredEvent } from '@/lib/types';
 
 const BERLIN_REGION = {
@@ -24,59 +23,34 @@ const BERLIN_REGION = {
 
 export default function MapScreen() {
   const router = useRouter();
-  const { data } = useEventFeed();
+  const { headline, dateLabel, vibeLabel, vibes, counts, day, ranked } = useNightFilter();
 
-  const interests = useProfileStore((state) => state.interests);
-  const profileVibes = useProfileStore((state) => state.vibes);
-  const districts = useProfileStore((state) => state.districts);
-  const maxPrice = useProfileStore((state) => state.maxPrice);
-  const freeOnly = useProfileStore((state) => state.freeOnly);
+  const setDay = useFilterStore((state) => state.setDay);
+  const toggleVibe = useFilterStore((state) => state.toggleVibe);
+  const clearVibes = useFilterStore((state) => state.clearVibes);
 
-  const days = useMemo(() => buildDayOptions(14), []);
-  const [selectedKey, setSelectedKey] = useState(() => days[0].key);
+  const [dateOpen, setDateOpen] = useState(false);
+  const [vibeOpen, setVibeOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
 
-  const events = useMemo(() => data?.events ?? [], [data]);
-
-  const counts = useMemo(() => {
-    const map: Record<string, number> = {};
-    for (const event of events) {
-      const key = nightKeyOf(event.starts_at);
-      map[key] = (map[key] ?? 0) + 1;
-    }
-    return map;
-  }, [events]);
-
-  const { scored, recommendedIds } = useMemo(() => {
-    const dayEvents = events.filter(
-      (event) =>
-        nightKeyOf(event.starts_at) === selectedKey &&
-        event.latitude != null &&
-        event.longitude != null,
-    );
-    const ranked = rankEvents(dayEvents, {
-      interests,
-      profileVibes,
-      selectedVibes: [],
-      districts,
-      maxPrice,
-      freeOnly,
-    });
+  const { located, recommendedIds } = useMemo(() => {
+    const withCoordinates = (entry: ScoredEvent) =>
+      entry.event.latitude != null && entry.event.longitude != null;
     return {
-      scored: [...ranked.recommended, ...ranked.others],
+      located: [...ranked.recommended, ...ranked.others].filter(withCoordinates),
       recommendedIds: new Set(ranked.recommended.map((entry) => entry.event.id)),
     };
-  }, [events, selectedKey, interests, profileVibes, districts, maxPrice, freeOnly]);
+  }, [ranked]);
 
   const byId = useMemo(() => {
     const map = new Map<string, ScoredEvent>();
-    for (const entry of scored) map.set(entry.event.id, entry);
+    for (const entry of located) map.set(entry.event.id, entry);
     return map;
-  }, [scored]);
+  }, [located]);
 
   const markers = useMemo<MapMarker[]>(
     () =>
-      scored.flatMap((entry) => {
+      located.flatMap((entry) => {
         const { latitude, longitude } = entry.event;
         if (latitude == null || longitude == null) return [];
         return [
@@ -89,22 +63,24 @@ export default function MapScreen() {
           },
         ];
       }),
-    [scored, recommendedIds],
+    [located, recommendedIds],
   );
 
   const active = activeId ? byId.get(activeId) : undefined;
 
   return (
     <SafeAreaView edges={['top']} className="bg-canvas flex-1">
-      <ScreenHeader
-        overline="Karte"
-        title="Wo heute was läuft"
-        subtitle={`${scored.length} ${scored.length === 1 ? 'Event' : 'Events'} mit Adresse`}
+      <FilterHeader
+        title={headline}
+        caption={`${located.length} ${located.length === 1 ? 'Ort' : 'Orte'} auf der Karte`}
+        dateLabel={dateLabel}
+        vibeLabel={vibeLabel}
+        vibeActive={vibes.length > 0}
+        onPressDate={() => setDateOpen(true)}
+        onPressVibe={() => setVibeOpen(true)}
       />
 
-      <DateStrip days={days} selectedKey={selectedKey} onSelect={setSelectedKey} counts={counts} />
-
-      <View className="mt-3 flex-1 overflow-hidden">
+      <View className="flex-1 overflow-hidden">
         <MapView
           style={{ flex: 1 }}
           initialRegion={BERLIN_REGION}
@@ -139,6 +115,7 @@ export default function MapScreen() {
               </Pressable>
             </View>
             <EventCard
+              compact
               item={active}
               highlight={recommendedIds.has(active.event.id)}
               onPress={() =>
@@ -148,6 +125,21 @@ export default function MapScreen() {
           </View>
         ) : null}
       </View>
+
+      <DayPickerSheet
+        isOpen={dateOpen}
+        onOpenChange={setDateOpen}
+        value={day}
+        onChange={setDay}
+        counts={counts}
+      />
+      <VibePickerSheet
+        isOpen={vibeOpen}
+        onOpenChange={setVibeOpen}
+        value={vibes}
+        onToggle={toggleVibe}
+        onClear={clearVibes}
+      />
     </SafeAreaView>
   );
 }

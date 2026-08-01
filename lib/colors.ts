@@ -5,15 +5,16 @@
  * `className` (icon props, navigation tints, map markers) must come from here.
  */
 export const palette = {
-  canvas: '#FAFAFC',
+  canvas: '#FBFAFD',
   card: '#FFFFFF',
+  surface: '#F3F2F8',
   ink: '#17151F',
   inkSoft: '#6B6880',
   inkFaint: '#9B98AC',
-  line: '#EAE8F0',
-  lineStrong: '#DCD9E6',
+  line: '#ECEAF2',
+  lineStrong: '#DEDBE8',
   brand: '#7C3AED',
-  brandDeep: '#3B1E7A',
+  brandDeep: '#2C1064',
   brandTint: '#F5F1FE',
-  brandTintStrong: '#E9E1FC',
+  brandTintStrong: '#E7DEFC',
 } as const;
