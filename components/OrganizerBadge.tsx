@@ -1,7 +1,7 @@
 import { Image, Text, View } from 'react-native';
 import { Heart } from 'lucide-react-native';
 
-import { mockAvatarFor } from '@/lib/avatars';
+import { photoForOrganizer } from '@/lib/photos';
 import { palette } from '@/lib/colors';
 import { organizerKey, useFavoritesStore } from '@/lib/favoritesStore';
 import { cn } from '@/lib/utils';
@@ -44,7 +44,7 @@ export function OrganizerBadge({
   return (
     <View className="flex-row items-center gap-2">
       <Image
-        source={imageUrl ? { uri: imageUrl } : mockAvatarFor(name)}
+        source={imageUrl ? { uri: imageUrl } : photoForOrganizer(name)}
         style={{ width: size, height: size, borderRadius: size / 2 }}
         resizeMode="cover"
         className="bg-surface"

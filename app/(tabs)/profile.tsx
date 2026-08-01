@@ -18,9 +18,9 @@ import { ScreenHeader } from '@/components/ScreenHeader';
 import { SelectChip } from '@/components/SelectChip';
 import { useTabBarClearance } from '@/components/FloatingTabBar';
 import { SafeAreaView } from '@/components/ui/primitives/SafeAreaView';
-import { mockAvatarFor } from '@/lib/avatars';
 import { palette } from '@/lib/colors';
 import { sortFavorites, useFavoritesStore } from '@/lib/favoritesStore';
+import { photoForOrganizer } from '@/lib/photos';
 import { useProfileStore } from '@/lib/profileStore';
 import { BERLIN_DISTRICTS, GENRE_GROUPS, GENRES } from '@/lib/taxonomy';
 
@@ -143,7 +143,7 @@ export default function ProfileScreen() {
                       source={
                         favorite.imageUrl
                           ? { uri: favorite.imageUrl }
-                          : mockAvatarFor(favorite.name)
+                          : photoForOrganizer(favorite.name)
                       }
                       style={{ width: 38, height: 38, borderRadius: 19 }}
                       resizeMode="cover"

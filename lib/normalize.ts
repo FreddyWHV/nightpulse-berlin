@@ -214,6 +214,15 @@ function venueProfile(names: (string | null | undefined)[]): VenueProfile | null
   return null;
 }
 
+/**
+ * Genres and vibes a venue is known for, or an empty list when it is not in the
+ * table. Used to give a house a fitting stand-in photo.
+ */
+export function venueTags(name: string | null | undefined): string[] {
+  const profile = venueProfile([name]);
+  return profile ? unique([...profile.genres, ...profile.vibes]) : [];
+}
+
 function unique(values: string[]): string[] {
   return [...new Set(values)];
 }
