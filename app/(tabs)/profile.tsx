@@ -1,6 +1,14 @@
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
 import { Input, Label, Switch, TextField } from 'heroui-native';
-import { RotateCcw, Sparkles } from 'lucide-react-native';
+import { RotateCcw } from 'lucide-react-native';
 
 import { PulseBadge } from '@/components/PulseLogo';
 import { ScreenHeader } from '@/components/ScreenHeader';
@@ -38,6 +46,7 @@ function Section({
 }
 
 export default function ProfileScreen() {
+  const hydrated = useProfileStore((state) => state.hydrated);
   const displayName = useProfileStore((state) => state.displayName);
   const genres = useProfileStore((state) => state.genres);
   const districts = useProfileStore((state) => state.districts);
@@ -51,11 +60,21 @@ export default function ProfileScreen() {
   const setFreeOnly = useProfileStore((state) => state.setFreeOnly);
   const reset = useProfileStore((state) => state.reset);
 
-  const stats = [
-    { label: 'Genres', value: String(genres.length) },
-    { label: 'Districts', value: String(districts.length || BERLIN_DISTRICTS.length) },
-    { label: 'Budget', value: maxPrice == null ? 'Any' : `€${maxPrice}` },
-  ];
+  const summary = [
+    genres.length
+      ? `${genres.length} ${genres.length === 1 ? 'genre' : 'genres'}`
+      : 'No genres yet',
+    districts.length ? `${districts.length} districts` : 'All of Berlin',
+    maxPrice == null ? 'Any budget' : `Up to €${maxPrice}`,
+  ].join(' · ');
+
+  if (!hydrated) {
+    return (
+      <SafeAreaView edges={['top']} className="bg-canvas flex-1 items-center justify-center">
+        <ActivityIndicator color={palette.brand} />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView edges={['top']} className="bg-canvas flex-1">
@@ -71,29 +90,14 @@ export default function ProfileScreen() {
           <ScreenHeader
             overline="Profile"
             title={displayName ? `Hey, ${displayName}` : 'Your music taste'}
-            subtitle="Genres, districts and budget shape the feed and the map."
+            subtitle={summary}
             right={<PulseBadge size={40} />}
           />
 
-          <View className="border-line bg-card mx-5 flex-row gap-2 rounded-3xl border p-4">
-            {stats.map((stat) => (
-              <View key={stat.label} className="flex-1">
-                <Text className="text-brand text-[22px] font-semibold">{stat.value}</Text>
-                <Text className="text-ink-soft mt-0.5 text-[12px]">{stat.label}</Text>
-              </View>
-            ))}
-          </View>
-
-          <View className="border-brand-tint-strong bg-brand-tint mx-5 mt-3 flex-row gap-3 rounded-3xl border p-4">
-            <Sparkles color={palette.brand} size={18} />
-            <View className="flex-1">
-              <Text className="text-brand text-[14px] font-semibold">Vibes live on the feed</Text>
-              <Text className="text-ink-soft mt-0.5 text-[12.5px] leading-[18px]">
-                Music genres are the lasting part and stay here. What you feel like tonight is
-                picked at the top of the feed and the map.
-              </Text>
-            </View>
-          </View>
+          <Text className="text-ink-faint px-5 text-[12.5px] leading-[18px]">
+            Saved on this device — your genres are still here after a reload. Tonight&apos;s vibe is
+            picked at the top of the feed instead.
+          </Text>
 
           <Section title="Name" caption="Optional, only used for the greeting.">
             <TextField>
@@ -162,7 +166,7 @@ export default function ProfileScreen() {
               ))}
             </View>
 
-            <View className="border-line bg-card mt-4 flex-row items-center justify-between rounded-3xl border px-4 py-3.5">
+            <View className="border-line mt-5 flex-row items-center justify-between border-t pt-4">
               <View className="flex-1 pr-3">
                 <Text className="text-ink text-[14px] font-semibold">Free events only</Text>
                 <Text className="text-ink-soft mt-0.5 text-[12px]">
@@ -179,10 +183,10 @@ export default function ProfileScreen() {
             <Pressable
               accessibilityRole="button"
               onPress={reset}
-              className="border-line bg-card flex-row items-center justify-center gap-2 rounded-2xl border px-4 py-3.5 active:opacity-70"
+              className="flex-row items-center gap-2 self-start active:opacity-60"
             >
-              <RotateCcw color={palette.inkSoft} size={15} />
-              <Text className="text-ink-soft text-[13.5px] font-semibold">Reset profile</Text>
+              <RotateCcw color={palette.inkFaint} size={14} />
+              <Text className="text-ink-faint text-[13px] font-semibold">Reset profile</Text>
             </Pressable>
           </View>
         </ScrollView>

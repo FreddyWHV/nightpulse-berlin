@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { buildMockEvents } from '@/lib/mockEvents';
+import { normalizeEvent } from '@/lib/normalize';
 import { supabase } from '@/lib/supabase';
 import type { EventRow } from '@/lib/types';
 
@@ -19,7 +20,7 @@ async function loadEvents(): Promise<EventFeedResult> {
   const to = new Date(now.getTime() + WINDOW_DAYS * 24 * 60 * 60 * 1000);
 
   const mock: EventFeedResult = {
-    events: buildMockEvents(now, WINDOW_DAYS),
+    events: buildMockEvents(now, WINDOW_DAYS).map(normalizeEvent),
     isMock: true,
   };
 
@@ -39,7 +40,7 @@ async function loadEvents(): Promise<EventFeedResult> {
   const rows = data ?? [];
   if (rows.length === 0) return mock;
 
-  return { events: rows, isMock: false };
+  return { events: rows.map(normalizeEvent), isMock: false };
 }
 
 export function useEventFeed() {

@@ -467,6 +467,224 @@ export function resolveVibes(tags: string[] | null | undefined): string[] {
   return resolve(VIBE_LOOKUP, tags);
 }
 
+/**
+ * Free-text phrases used to read a genre out of an event title when the import
+ * brought no `category` values. Aliases are matched as well, these are the
+ * multi-word and German spellings on top.
+ */
+const GENRE_PHRASES: Record<string, string[]> = {
+  house: ['house', 'deep house', 'soulful house', 'house music'],
+  techhouse: ['tech house'],
+  minimal: ['minimal', 'micro house'],
+  disco: ['disco', 'italo', 'nu disco', 'roller disco', 'discothek'],
+  afrohouse: ['afro house', 'amapiano', 'afro tech'],
+  techno: ['techno', 'klubnacht', 'clubnacht techno'],
+  hardtechno: ['hard techno', 'schranz', 'hardgroove', 'industrial'],
+  melodictechno: ['melodic techno', 'melodic house', 'progressive house'],
+  electro: ['electro', 'electronic', 'electronica', 'elektro', 'elektronische'],
+  wave: ['wave', 'new wave', 'darkwave', 'cold wave', 'synth pop', 'synthpop', 'ebm'],
+  trance: ['trance', 'psytrance', 'psy trance', 'goa'],
+  hardstyle: ['hardstyle', 'gabber', 'frenchcore', 'uptempo', 'hardcore techno'],
+  dnb: ['drum and bass', 'drum n bass', 'dnb', 'd n b', 'liquid funk', 'neurofunk', 'jump up'],
+  jungle: ['jungle', 'breakbeat', 'breaks', 'big beat'],
+  dubstep: ['dubstep', 'riddim', 'bass music', 'halftime'],
+  ukgarage: ['uk garage', '2 step', 'speed garage', 'bassline'],
+  footwork: ['footwork', 'juke', 'jersey club', 'ghettotech'],
+  hiphop: ['hip hop', 'hiphop', 'rap', 'deutschrap', 'boom bap', 'freestyle', 'cypher', 'swag jam'],
+  trap: ['trap', 'drill', 'phonk'],
+  grime: ['grime', 'uk drill'],
+  rnb: ['r n b', 'rnb', 'neo soul', 'rhythm and blues'],
+  dancehall: ['dancehall', 'reggae', 'ragga', 'bashment', 'dub', 'ska', 'roots'],
+  soul: ['soul', 'motown', 'northern soul'],
+  funk: ['funk', 'boogie', 'p funk'],
+  jazz: [
+    'jazz',
+    'jam session',
+    'jamsession',
+    'big band',
+    'bigband',
+    'bebop',
+    'swing',
+    'quintett',
+    'quartett',
+    'septett',
+    'trio',
+    'all stars',
+  ],
+  afrobeats: ['afrobeats', 'afrobeat', 'afropop', 'highlife', 'afroswing'],
+  latin: [
+    'latin',
+    'latino',
+    'salsa',
+    'reggaeton',
+    'perreo',
+    'bachata',
+    'cumbia',
+    'merengue',
+    'tango',
+    'havanna',
+  ],
+  bailefunk: ['baile funk', 'funk carioca', 'gqom', 'kuduro', 'batida'],
+  balkan: ['balkan', 'brass', 'blasmusik', 'blasorchester', 'klezmer', 'folk', 'oriental'],
+  indie: ['indie', 'indie rock', 'indie pop', 'indie disco', 'alternative', 'britpop'],
+  rock: ['rock', 'garage rock', 'classic rock', 'psychedelic', 'stoner', 'rockabilly'],
+  shoegaze: ['shoegaze', 'dream pop', 'noise pop', 'post rock', 'slowcore'],
+  postpunk: ['post punk', 'goth', 'gothic', 'death rock', 'batcave'],
+  punk: ['punk', 'punk rock', 'hardcore punk', 'ska punk', 'emo', 'crust'],
+  metal: ['metal', 'death metal', 'black metal', 'doom', 'thrash', 'sludge', 'grindcore'],
+  pop: ['pop', 'charts', 'top 40', 'hits', 'mainstream'],
+  nineties: ['90s', '90er', '2000s', '2000er', 'nineties', 'y2k', 'throwback'],
+  eighties: ['80s', '80er', 'eighties', 'new romantic'],
+  schlager: ['schlager', 'apres ski', 'volksmusik', 'deutschpop'],
+  kpop: ['k pop', 'kpop', 'j pop', 'jpop', 'city pop', 'anime'],
+  ambient: ['ambient', 'drone', 'new age', 'soundscape'],
+  experimental: ['experimental', 'noise', 'modular', 'avant garde', 'improvisation'],
+  idm: ['idm', 'breakcore', 'glitch', 'braindance'],
+};
+
+/** Same idea for vibes: what the title says about the mood of the night. */
+const VIBE_PHRASES: Record<string, string[]> = {
+  dancing: [
+    'party',
+    'rave',
+    'dance',
+    'dancing',
+    'tanzen',
+    'tanz',
+    'clubnacht',
+    'klubnacht',
+    'dance floor',
+    'dancefloor',
+    'roller disco',
+    'sause',
+    'fiesta',
+    'night fever',
+  ],
+  chill: ['bar', 'lounge', 'cocktail', 'chill', 'apero', 'aperitivo', 'kneipe', 'wohnzimmer'],
+  live: [
+    'live',
+    'concert',
+    'konzert',
+    'tour',
+    'gig',
+    'support',
+    'showcase',
+    'open stage',
+    'unplugged',
+    'session',
+    'presents',
+    'album',
+  ],
+  underground: ['underground', 'warehouse', 'basement', 'keller', 'raw', 'diy'],
+  dressy: ['gala', 'dresscode', 'elegant', 'glamour', 'burlesque', 'variete', 'revue', 'soiree'],
+  social: [
+    'meetup',
+    'take me out',
+    'speed dating',
+    'singles',
+    'kennenlernen',
+    'new in town',
+    'language exchange',
+    'stammtisch',
+  ],
+  outdoors: [
+    'open air',
+    'openair',
+    'garten',
+    'garden',
+    'rooftop',
+    'terrasse',
+    'biergarten',
+    'strand',
+    'beach',
+  ],
+  afterhours: ['afterhour', 'afterhours', 'after hour', 'sunrise', 'early bird', 'nonstop'],
+  queer: ['queer', 'gay', 'lesbian', 'drag', 'ballroom', 'pride', 'csd', 'lgbt', 'lgbtq', 'dyke'],
+  arts: [
+    'quiz',
+    'pubquiz',
+    'pub quiz',
+    'karaoke',
+    'comedy',
+    'stand up',
+    'standup',
+    'lesung',
+    'poetry',
+    'slam',
+    'performance',
+    'kino',
+    'film',
+    'circus',
+    'wrestling',
+    'bingo',
+    'theater',
+    'ausstellung',
+    'flohmarkt',
+    'workshop',
+    'kunst',
+  ],
+};
+
+/** Lowercases, strips umlauts and pads the text so phrases match whole words. */
+export function normalizeText(value: string): string {
+  const cleaned = value
+    .toLowerCase()
+    .replace(/[äöüß]/g, (char) => UMLAUTS[char] ?? char)
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+  return cleaned ? ` ${cleaned} ` : '';
+}
+
+function buildPhraseLookup(
+  items: { id: string; aliases: string[] }[],
+  phrases: Record<string, string[]>,
+) {
+  const lookup = new Map<string, string>();
+  const add = (phrase: string, id: string) => {
+    const normalized = normalizeText(phrase).trim();
+    if (normalized.length >= 3) lookup.set(normalized, id);
+  };
+  for (const item of items) {
+    add(item.id, item.id);
+    for (const alias of item.aliases) add(alias, item.id);
+    for (const phrase of phrases[item.id] ?? []) add(phrase, item.id);
+  }
+  return lookup;
+}
+
+const GENRE_PHRASE_LOOKUP = buildPhraseLookup(GENRES, GENRE_PHRASES);
+const VIBE_PHRASE_LOOKUP = buildPhraseLookup(VIBES, VIBE_PHRASES);
+
+function matchPhrases(lookup: Map<string, string>, text: string): string[] {
+  const padded = normalizeText(text);
+  if (!padded) return [];
+
+  const matched: { phrase: string; id: string }[] = [];
+  for (const [phrase, id] of lookup) {
+    if (padded.includes(` ${phrase} `)) matched.push({ phrase, id });
+  }
+
+  // Keep the most specific hit only: "baile funk" wins over "funk".
+  const ids = new Set<string>();
+  for (const entry of matched) {
+    const covered = matched.some(
+      (other) => other.phrase.length > entry.phrase.length && other.phrase.includes(entry.phrase),
+    );
+    if (!covered) ids.add(entry.id);
+  }
+  return [...ids];
+}
+
+/** Reads genres out of free text (event title, venue, line-up). */
+export function inferGenresFromText(text: string): string[] {
+  return matchPhrases(GENRE_PHRASE_LOOKUP, text);
+}
+
+/** Reads vibes out of free text (event title, venue, line-up). */
+export function inferVibesFromText(text: string): string[] {
+  return matchPhrases(VIBE_PHRASE_LOOKUP, text);
+}
+
 export const GENRE_LABELS: Record<string, string> = Object.fromEntries(
   GENRES.map((genre) => [genre.id, genre.label]),
 );

@@ -12,10 +12,11 @@ import { useNightFilter } from '@/hooks/useNightFilter';
 import { palette } from '@/lib/colors';
 import { useFilterStore } from '@/lib/filterStore';
 import type { ScoredEvent } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
 type FeedRow =
   | { kind: 'section'; key: string; title: string; caption?: string }
-  | { kind: 'event'; key: string; item: ScoredEvent; highlight: boolean }
+  | { kind: 'event'; key: string; item: ScoredEvent; highlight: boolean; divider: boolean }
   | { kind: 'note'; key: string; text: string };
 
 export default function FeedScreen() {
@@ -51,9 +52,15 @@ export default function FeedScreen() {
         title: 'Your kind of night',
         caption: `${ranked.recommended.length}`,
       });
-      for (const item of ranked.recommended) {
-        result.push({ kind: 'event', key: `r-${item.event.id}`, item, highlight: true });
-      }
+      ranked.recommended.forEach((item, index) => {
+        result.push({
+          kind: 'event',
+          key: `r-${item.event.id}`,
+          item,
+          highlight: true,
+          divider: index < ranked.recommended.length - 1,
+        });
+      });
     } else if (ranked.hasTaste) {
       result.push({
         kind: 'note',
@@ -71,9 +78,15 @@ export default function FeedScreen() {
         title: ranked.recommended.length ? 'Also on in Berlin' : 'On in Berlin',
         caption: `${ranked.others.length}`,
       });
-      for (const item of ranked.others) {
-        result.push({ kind: 'event', key: `o-${item.event.id}`, item, highlight: false });
-      }
+      ranked.others.forEach((item, index) => {
+        result.push({
+          kind: 'event',
+          key: `o-${item.event.id}`,
+          item,
+          highlight: false,
+          divider: index < ranked.others.length - 1,
+        });
+      });
     }
 
     if (!ranked.recommended.length && !ranked.others.length && !isPending) {
@@ -117,15 +130,15 @@ export default function FeedScreen() {
               <Pressable
                 accessibilityRole="button"
                 onPress={() => router.push('/profile')}
-                className="border-brand-tint-strong bg-brand-tint mx-5 mt-4 flex-row items-center justify-between rounded-3xl border p-4 active:opacity-80"
+                className="border-line mx-5 mt-4 flex-row items-center border-b pb-4 active:opacity-60"
               >
                 <View className="flex-1 pr-3">
-                  <Text className="text-brand text-[15px] font-semibold">Pick your genres</Text>
-                  <Text className="text-ink-soft mt-0.5 text-[13px] leading-[18px]">
+                  <Text className="text-ink text-[14.5px] font-semibold">Pick your genres</Text>
+                  <Text className="text-ink-soft mt-0.5 text-[12.5px] leading-[18px]">
                     Set your music taste in the profile — the feed ranks by it.
                   </Text>
                 </View>
-                <ChevronRight color={palette.brand} size={20} />
+                <ChevronRight color={palette.brand} size={18} />
               </Pressable>
             )}
 
@@ -139,7 +152,7 @@ export default function FeedScreen() {
         renderItem={({ item: row }) => {
           if (row.kind === 'section') {
             return (
-              <View className="flex-row items-center justify-between px-5 pt-6 pb-2.5">
+              <View className="flex-row items-center justify-between px-5 pt-6 pb-1">
                 <Text className="text-ink-faint text-[11px] font-semibold tracking-[1.4px] uppercase">
                   {row.title}
                 </Text>
@@ -152,21 +165,23 @@ export default function FeedScreen() {
 
           if (row.kind === 'note') {
             return (
-              <View className="border-line bg-card mx-5 mt-4 rounded-3xl border border-dashed px-4 py-5">
-                <Text className="text-ink-soft text-[13px] leading-[19px]">{row.text}</Text>
-              </View>
+              <Text className="text-ink-soft px-5 pt-4 text-[13.5px] leading-[20px]">
+                {row.text}
+              </Text>
             );
           }
 
           return (
-            <View className="px-5 pb-2.5">
-              <EventCard
-                item={row.item}
-                highlight={row.highlight}
-                onPress={() =>
-                  router.push({ pathname: '/event/[id]', params: { id: row.item.event.id } })
-                }
-              />
+            <View className="px-5">
+              <View className={cn(row.divider && 'border-line border-b')}>
+                <EventCard
+                  item={row.item}
+                  highlight={row.highlight}
+                  onPress={() =>
+                    router.push({ pathname: '/event/[id]', params: { id: row.item.event.id } })
+                  }
+                />
+              </View>
             </View>
           );
         }}

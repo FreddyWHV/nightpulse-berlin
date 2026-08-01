@@ -1,12 +1,12 @@
 {
-  "name": "Your App Name",
-  "short_name": "Your App",
-  "description": "An app built with Bilt",
+  "name": "NightPulse Berlin",
+  "short_name": "NightPulse",
+  "description": "Club and bar nights in Berlin, matched to your music taste and tonight's mood.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "theme_color": "#6366f1",
+  "theme_color": "#FF0085",
   "background_color": "#ffffff",
   "icons": [
     {

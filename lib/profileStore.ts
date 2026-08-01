@@ -1,10 +1,13 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+
+import { deviceStorage } from './storage';
 
 /**
  * The profile only stores lasting taste: music genres, districts, budget.
  * Vibes are a per-night decision and live in `filterStore` instead.
+ *
+ * Everything here is written to the device, so a reload keeps the selection.
  */
 export interface ProfileState {
   displayName: string;
@@ -14,6 +17,8 @@ export interface ProfileState {
   /** null = no budget limit. */
   maxPrice: number | null;
   freeOnly: boolean;
+  /** False until the stored profile has been read back from the device. */
+  hydrated: boolean;
   setDisplayName: (value: string) => void;
   toggleGenre: (id: string) => void;
   toggleDistrict: (id: string) => void;
@@ -38,6 +43,7 @@ export const useProfileStore = create<ProfileState>()(
   persist(
     (set) => ({
       ...INITIAL,
+      hydrated: false,
       setDisplayName: (value) => set({ displayName: value }),
       toggleGenre: (id) => set((state) => ({ genres: toggle(state.genres, id) })),
       toggleDistrict: (id) => set((state) => ({ districts: toggle(state.districts, id) })),
@@ -48,7 +54,8 @@ export const useProfileStore = create<ProfileState>()(
     {
       // v2: vibes moved out of the profile, interests renamed to genres.
       name: 'nightpulse-profile-v2',
-      storage: createJSONStorage(() => AsyncStorage),
+      version: 2,
+      storage: createJSONStorage(() => deviceStorage),
       partialize: (state) => ({
         displayName: state.displayName,
         genres: state.genres,
@@ -56,6 +63,9 @@ export const useProfileStore = create<ProfileState>()(
         maxPrice: state.maxPrice,
         freeOnly: state.freeOnly,
       }),
+      onRehydrateStorage: () => () => {
+        useProfileStore.setState({ hydrated: true });
+      },
     },
   ),
 );

@@ -12,22 +12,10 @@ import { palette } from '@/lib/colors';
 import { formatDateTime, formatPrice, formatTime } from '@/lib/dates';
 import { GENRE_LABELS, VIBE_LABELS, resolveGenres, resolveVibes } from '@/lib/taxonomy';
 
-function InfoRow({
-  icon,
-  label,
-  value,
-  last = false,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  last?: boolean;
-}) {
+function InfoRow({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <View className={last ? 'flex-row gap-3 py-3.5' : 'border-line flex-row gap-3 border-b py-3.5'}>
-      <View className="bg-brand-tint mt-0.5 h-7 w-7 items-center justify-center rounded-full">
-        {icon}
-      </View>
+    <View className="border-line flex-row gap-3 border-b py-3.5">
+      <View className="mt-1 w-4 items-center">{icon}</View>
       <View className="flex-1">
         <Text className="text-ink-faint text-[11px] font-semibold tracking-[1px] uppercase">
           {label}
@@ -56,7 +44,7 @@ function ActionButton({
       className={
         primary
           ? 'bg-brand flex-1 flex-row items-center justify-center gap-2 rounded-2xl px-4 py-3.5 active:opacity-80'
-          : 'border-line bg-card flex-1 flex-row items-center justify-center gap-2 rounded-2xl border px-4 py-3.5 active:opacity-80'
+          : 'border-line-strong flex-1 flex-row items-center justify-center gap-2 rounded-2xl border px-4 py-3.5 active:opacity-70'
       }
     >
       {icon}
@@ -153,11 +141,11 @@ export default function EventDetailScreen() {
             {event.title}
           </Text>
 
-          <View className="border-line bg-card mt-4 rounded-3xl border p-4">
+          <View className="mt-4">
             <OrganizerBadge
               name={organizer}
               imageUrl={event.organizer_image_url}
-              size={38}
+              size={40}
               textClassName="text-ink text-[14px] font-semibold"
             />
             <Text className="text-ink-soft mt-2 text-[12.5px] leading-[18px]">
@@ -167,23 +155,22 @@ export default function EventDetailScreen() {
               <Pressable
                 accessibilityRole="link"
                 onPress={() => void Linking.openURL(event.venue_homepage ?? '')}
-                className="mt-2 self-start active:opacity-70"
+                className="mt-1.5 self-start active:opacity-70"
               >
                 <Text className="text-brand text-[12.5px] font-semibold">Open website</Text>
               </Pressable>
             ) : null}
           </View>
-        </View>
 
-        {tags.length ? (
-          <View className="flex-row flex-wrap gap-2 px-5 pt-4">
-            {tags.map((tag) => (
-              <View key={tag} className="bg-surface rounded-full px-3 py-1.5">
-                <Text className="text-ink-soft text-[12px] font-medium capitalize">{tag}</Text>
-              </View>
-            ))}
-          </View>
-        ) : null}
+          {tags.length ? (
+            <Text className="text-ink-soft mt-4 text-[13px] capitalize">{tags.join(' · ')}</Text>
+          ) : null}
+          {event.tags_inferred ? (
+            <Text className="text-ink-faint mt-1 text-[11px]">
+              Genres and vibe estimated from the title and the venue programme.
+            </Text>
+          ) : null}
+        </View>
 
         {event.description_ours ? (
           <Text className="text-ink-soft px-5 pt-4 text-[15px] leading-[23px]">
@@ -191,29 +178,27 @@ export default function EventDetailScreen() {
           </Text>
         ) : null}
 
-        <View className="border-line bg-card mx-5 mt-5 rounded-3xl border px-4">
+        <View className="border-line mx-5 mt-5 border-t">
           <InfoRow
-            icon={<Clock color={palette.brand} size={14} />}
+            icon={<Clock color={palette.brand} size={15} />}
             label="When"
             value={timeValue}
           />
           <InfoRow
-            icon={<MapPin color={palette.brand} size={14} />}
+            icon={<MapPin color={palette.brand} size={15} />}
             label="Where"
             value={[event.venue_name, event.district].filter(Boolean).join(' · ') || 'Berlin'}
           />
           <InfoRow
-            icon={<Ticket color={palette.brand} size={14} />}
+            icon={<Ticket color={palette.brand} size={15} />}
             label="Entry"
-            value={formatPrice(event.price_min, event.price_max, event.is_free)}
-            last={lineup.length === 0}
+            value={formatPrice(event.price_min, event.price_max, event.is_free) ?? 'Not stated'}
           />
           {lineup.length ? (
             <InfoRow
-              icon={<Text className="text-brand text-[11px] font-bold">DJ</Text>}
+              icon={<Text className="text-brand text-[10px] font-bold">DJ</Text>}
               label="Line-up"
               value={lineup.join(', ')}
-              last
             />
           ) : null}
         </View>
@@ -235,7 +220,7 @@ export default function EventDetailScreen() {
         </View>
 
         {event.latitude != null && event.longitude != null ? (
-          <View className="border-line mx-5 mt-5 overflow-hidden rounded-3xl border">
+          <View className="mx-5 mt-5 overflow-hidden rounded-3xl">
             <MapView
               style={{ height: 180 }}
               initialRegion={{
@@ -248,7 +233,6 @@ export default function EventDetailScreen() {
                 {
                   id: event.id,
                   coordinate: { latitude: event.latitude, longitude: event.longitude },
-                  title: event.venue_name ?? event.title,
                   color: palette.brand,
                 },
               ]}

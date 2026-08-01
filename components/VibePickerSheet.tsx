@@ -31,10 +31,7 @@ function OptionRow({
       accessibilityRole="button"
       accessibilityState={{ selected }}
       onPress={onPress}
-      className={cn(
-        'flex-row items-center gap-3 rounded-2xl border px-4 py-3.5 active:opacity-80',
-        selected ? 'border-brand-tint-strong bg-brand-tint' : 'border-line bg-card',
-      )}
+      className="border-line flex-row items-center gap-3 border-b py-3.5 active:opacity-60"
     >
       <View className="flex-1">
         <Text className={cn('text-[15px] font-semibold', selected ? 'text-brand' : 'text-ink')}>
@@ -85,7 +82,7 @@ export function VibePickerSheet({
             </View>
 
             <BottomSheetScrollView
-              contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 16, gap: 8 }}
+              contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 16 }}
             >
               <OptionRow
                 label="Anything"

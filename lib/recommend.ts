@@ -55,7 +55,7 @@ export function scoreEvent(event: EventRow, options: RankOptions): ScoredEvent {
   }
   if (districtHit && event.district) reasons.push(event.district);
 
-  return { event, score, genreHits, vibeHits, reasons };
+  return { event, score, genreHits, vibeHits, reasons, isRecommended: false };
 }
 
 /**
@@ -86,14 +86,16 @@ export function rankEvents(events: EventRow[], options: RankOptions): RankedFeed
   const hasTaste = options.genres.length > 0 || options.vibes.length > 0;
   const scored = events
     .filter((event) => passesProfileFilters(event, options))
-    .map((event) => scoreEvent(event, options));
+    .map((event) => {
+      const entry = scoreEvent(event, options);
+      return { ...entry, isRecommended: isRecommended(entry, options) };
+    });
 
   const recommended = scored
-    .filter((entry) => isRecommended(entry, options))
+    .filter((entry) => entry.isRecommended)
     .sort((left, right) => right.score - left.score || byTime(left, right));
 
-  const recommendedIds = new Set(recommended.map((entry) => entry.event.id));
-  const others = scored.filter((entry) => !recommendedIds.has(entry.event.id)).sort(byTime);
+  const others = scored.filter((entry) => !entry.isRecommended).sort(byTime);
 
   return { recommended, others, hasTaste };
 }

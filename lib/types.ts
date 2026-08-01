@@ -33,6 +33,11 @@ export interface EventRow {
   organizer_image_url: string | null;
   /** `sources.type`, e.g. `venue`, `promoter`. */
   organizer_type: string | null;
+  /**
+   * Client-side flag (not part of the view): genres/vibes were derived from the
+   * title and the venue because the import brought none.
+   */
+  tags_inferred?: boolean;
 }
 
 export interface ScoredEvent {
@@ -43,4 +48,6 @@ export interface ScoredEvent {
   /** Vibe ids from the top-bar filter that matched this event. */
   vibeHits: string[];
   reasons: string[];
+  /** True when this counts as a real recommendation, not just "also happening". */
+  isRecommended: boolean;
 }

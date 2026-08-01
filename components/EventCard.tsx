@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 interface EventCardProps {
   item: ScoredEvent;
   onPress: () => void;
-  /** Marks the card as a profile match. */
+  /** Marks the event as a profile match. */
   highlight?: boolean;
   /** Compact variant used on the map overlay. */
   compact?: boolean;
@@ -32,79 +32,75 @@ function tagsOf(item: ScoredEvent): string[] {
   return (item.event.category ?? []).slice(0, 2).map((tag) => tag.replace(/[-_]/g, ' '));
 }
 
+/**
+ * One event as a plain list row — no card, no frame. The photo on the right and
+ * the hairline the list draws underneath do the separating.
+ */
 export function EventCard({ item, onPress, highlight = false, compact = false }: EventCardProps) {
   const { event } = item;
   const tags = tagsOf(item);
   const lineup = event.lineup?.filter(Boolean) ?? [];
-  const coverSize = compact ? 72 : 92;
+  const price = formatPrice(event.price_min, event.price_max, event.is_free);
+  const meta = [formatTimeRange(event.starts_at, compact ? null : event.ends_at), price]
+    .filter(Boolean)
+    .join(' · ');
+  const coverSize = compact ? 64 : 88;
 
   return (
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      className={cn(
-        'bg-card overflow-hidden rounded-3xl border p-3 active:opacity-90',
-        highlight ? 'border-brand-tint-strong' : 'border-line',
-      )}
+      className={cn('flex-row gap-3.5 active:opacity-60', compact ? 'py-1' : 'py-4')}
     >
-      <View className="flex-row gap-3.5">
-        <View className="flex-1 py-0.5">
-          <View className="flex-row items-center gap-1.5">
-            <Text className="text-ink-soft text-[12.5px] font-semibold">
-              {formatTimeRange(event.starts_at, compact ? null : event.ends_at)}
-            </Text>
-            <View className="bg-line-strong h-[3px] w-[3px] rounded-full" />
-            <Text numberOfLines={1} className="text-ink-faint flex-1 text-[12.5px]">
-              {formatPrice(event.price_min, event.price_max, event.is_free)}
-            </Text>
-          </View>
-
-          <Text
-            numberOfLines={2}
-            className="text-ink mt-1 text-[16.5px] leading-[21px] font-semibold tracking-[-0.3px]"
-          >
-            {event.title}
-          </Text>
-
-          <View className="mt-2">
-            <OrganizerBadge
-              name={event.organizer_name ?? event.venue_name}
-              imageUrl={event.organizer_image_url}
-              suffix={event.district}
-              size={20}
-            />
-          </View>
-
-          {lineup.length && !compact ? (
-            <Text numberOfLines={1} className="text-ink-faint mt-1.5 text-[12px]">
-              {lineup.join(', ')}
-            </Text>
+      <View className="flex-1">
+        <View className="flex-row items-center gap-1.5">
+          {highlight ? (
+            <>
+              <Text className="text-brand text-[12px] font-semibold">For you</Text>
+              <View className="bg-line-strong h-[3px] w-[3px] rounded-full" />
+            </>
           ) : null}
+          <Text numberOfLines={1} className="text-ink-soft flex-1 text-[12.5px] font-medium">
+            {meta}
+          </Text>
         </View>
 
-        <EventCover
-          event={event}
-          width={coverSize}
-          height={coverSize}
-          rounded="rounded-2xl"
-          monogramSize={15}
-        />
+        <Text
+          numberOfLines={2}
+          className="text-ink mt-1 text-[16.5px] leading-[21px] font-semibold tracking-[-0.3px]"
+        >
+          {event.title}
+        </Text>
+
+        <View className="mt-1.5">
+          <OrganizerBadge
+            name={event.organizer_name ?? event.venue_name}
+            imageUrl={event.organizer_image_url}
+            suffix={event.district}
+            size={20}
+          />
+        </View>
+
+        {lineup.length && !compact ? (
+          <Text numberOfLines={1} className="text-ink-faint mt-1 text-[12px]">
+            {lineup.join(', ')}
+          </Text>
+        ) : null}
+
+        {tags.length ? (
+          <Text numberOfLines={1} className="text-ink-faint mt-1 text-[12px] capitalize">
+            {tags.join(' · ')}
+          </Text>
+        ) : null}
       </View>
 
-      {highlight || tags.length ? (
-        <View className="mt-3 flex-row flex-wrap items-center gap-1.5">
-          {highlight ? (
-            <View className="bg-brand-tint rounded-full px-2.5 py-[5px]">
-              <Text className="text-brand text-[11px] font-semibold">For you</Text>
-            </View>
-          ) : null}
-          {tags.map((tag) => (
-            <View key={tag} className="bg-surface rounded-full px-2.5 py-[5px]">
-              <Text className="text-ink-soft text-[11px] font-medium capitalize">{tag}</Text>
-            </View>
-          ))}
-        </View>
-      ) : null}
+      <EventCover
+        event={event}
+        width={coverSize}
+        height={coverSize}
+        rounded="rounded-2xl"
+        monogramSize={14}
+      />
     </Pressable>
   );
 }

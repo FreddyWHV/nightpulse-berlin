@@ -18,8 +18,8 @@ import { AnimatedView } from '@/components/ui/primitives/AnimatedView';
 import { useFilterStore } from '@/lib/filterStore';
 import { VIBES } from '@/lib/taxonomy';
 
-const CORE_SIZE = 88;
-const RING_GROWTH = 1.35;
+const CORE_SIZE = 84;
+const RING_GROWTH = 1.7;
 
 /**
  * Launch screen: the pulse mark beats for a moment and asks for tonight's mood.
@@ -67,13 +67,13 @@ export function MoodGate() {
 
   const fadeStyle = useAnimatedStyle(() => ({ opacity: fade.value }));
   const innerRing = useAnimatedStyle(() => ({
-    opacity: 0.3 * (1 - pulse.value),
+    opacity: 0.6 * (1 - pulse.value),
     transform: [{ scale: 1 + pulse.value * RING_GROWTH }],
   }));
   const outerRing = useAnimatedStyle(() => {
     const shifted = (pulse.value + 0.5) % 1;
     return {
-      opacity: 0.22 * (1 - shifted),
+      opacity: 0.45 * (1 - shifted),
       transform: [{ scale: 1 + shifted * RING_GROWTH }],
     };
   });
@@ -102,14 +102,14 @@ export function MoodGate() {
               { height: CORE_SIZE, width: CORE_SIZE, borderRadius: CORE_SIZE / 2 },
               outerRing,
             ]}
-            className="bg-brand absolute"
+            className="border-brand absolute border-2"
           />
           <AnimatedView
             style={[
               { height: CORE_SIZE, width: CORE_SIZE, borderRadius: CORE_SIZE / 2 },
               innerRing,
             ]}
-            className="bg-brand absolute"
+            className="border-brand absolute border-2"
           />
           <AnimatedView
             style={[
@@ -118,7 +118,7 @@ export function MoodGate() {
             ]}
             className="bg-brand items-center justify-center"
           >
-            <PulseLogo size={CORE_SIZE * 0.55} color="#FFFFFF" strokeWidth={2.4} />
+            <PulseLogo size={CORE_SIZE * 0.62} color="#FFFFFF" strokeWidth={1.9} />
           </AnimatedView>
         </View>
 

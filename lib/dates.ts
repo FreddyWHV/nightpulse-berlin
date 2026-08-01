@@ -182,13 +182,17 @@ export function formatDateTime(timestamp: string): string {
   return `${WEEKDAYS_LONG[date.getDay()]}, ${date.getDate()} ${MONTHS_SHORT[date.getMonth()]} · ${format(date, 'HH:mm')}`;
 }
 
+/**
+ * Entry price for the UI. `null` when the import carries no price at all, so
+ * the screens can simply leave the line out instead of showing a placeholder.
+ */
 export function formatPrice(
   priceMin: number | null,
   priceMax: number | null,
   isFree: boolean | null,
-): string {
+): string | null {
   if (isFree) return 'Free entry';
-  if (priceMin == null && priceMax == null) return 'Price TBA';
+  if (priceMin == null && priceMax == null) return null;
   if (priceMin != null && priceMax != null && priceMax > priceMin) {
     return `€${Math.round(priceMin)}–${Math.round(priceMax)}`;
   }
