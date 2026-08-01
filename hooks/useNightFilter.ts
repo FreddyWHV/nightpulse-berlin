@@ -3,6 +3,7 @@ import { parseISO } from 'date-fns';
 
 import { useEventFeed } from '@/hooks/useEvents';
 import { formatDayButton, formatDayHeadline, nightKeyOf } from '@/lib/dates';
+import { useFavoritesStore } from '@/lib/favoritesStore';
 import { useFilterStore } from '@/lib/filterStore';
 import { useProfileStore } from '@/lib/profileStore';
 import { rankEvents } from '@/lib/recommend';
@@ -17,6 +18,8 @@ export function useNightFilter() {
 
   const day = useFilterStore((state) => state.day);
   const vibes = useFilterStore((state) => state.vibes);
+
+  const favorites = useFavoritesStore((state) => state.items);
 
   const genres = useProfileStore((state) => state.genres);
   const districts = useProfileStore((state) => state.districts);
@@ -36,8 +39,15 @@ export function useNightFilter() {
 
   const ranked = useMemo(() => {
     const nightEvents = events.filter((event) => nightKeyOf(event.starts_at) === day);
-    return rankEvents(nightEvents, { genres, vibes, districts, maxPrice, freeOnly });
-  }, [events, day, genres, vibes, districts, maxPrice, freeOnly]);
+    return rankEvents(nightEvents, {
+      genres,
+      vibes,
+      districts,
+      maxPrice,
+      freeOnly,
+      favorites: Object.keys(favorites),
+    });
+  }, [events, day, genres, vibes, districts, maxPrice, freeOnly, favorites]);
 
   const selectedDate = useMemo(() => parseISO(day), [day]);
 

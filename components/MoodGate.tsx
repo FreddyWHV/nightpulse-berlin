@@ -5,6 +5,7 @@ import { Button } from 'heroui-native';
 import {
   Easing,
   cancelAnimation,
+  interpolate,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
@@ -19,11 +20,29 @@ import { palette } from '@/lib/colors';
 import { useFilterStore } from '@/lib/filterStore';
 import { VIBES } from '@/lib/taxonomy';
 
-const CORE_SIZE = 84;
-const RING_GROWTH = 1.7;
+const CORE_SIZE = 66;
+/** How far a ring travels before it disappears, as a multiple of the core. */
+const RING_REACH = 3.3;
+/** One full loop emits three rings, one every 800 ms. */
+const CYCLE_MS = 2400;
+const STAGE_SIZE = Math.round(CORE_SIZE * RING_REACH) + 16;
 
 /**
- * Launch screen: the pulse mark beats for a moment and asks for tonight's mood.
+ * One outgoing ring. `phase` staggers it inside the loop and the travel curve is
+ * eased out, so the ring slows down while it fades — like a radar sweep.
+ */
+function ringStyle(driver: number, phase: number) {
+  'worklet';
+  const progress = (driver + phase) % 1;
+  const eased = 1 - (1 - progress) * (1 - progress);
+  return {
+    opacity: interpolate(progress, [0, 0.1, 0.75, 1], [0, 0.5, 0.12, 0]),
+    transform: [{ scale: 1 + eased * (RING_REACH - 1) }],
+  };
+}
+
+/**
+ * Launch screen: the radar mark sends rings outwards and asks for tonight's mood.
  * Answering applies the vibes to the shared filter and fades into the feed.
  * Shown once per app session (the flag lives in memory, not on disk).
  */
@@ -42,8 +61,9 @@ export function MoodGate() {
   useEffect(() => {
     if (!visible) return undefined;
     fade.value = withTiming(1, { duration: 260, easing: Easing.out(Easing.quad) });
+    // Linear driver: rings need to leave the core at an even rhythm.
     pulse.value = withRepeat(
-      withTiming(1, { duration: 1900, easing: Easing.out(Easing.ease) }),
+      withTiming(1, { duration: CYCLE_MS, easing: Easing.linear }),
       -1,
       false,
     );
@@ -67,22 +87,28 @@ export function MoodGate() {
   };
 
   const fadeStyle = useAnimatedStyle(() => ({ opacity: fade.value }));
-  const innerRing = useAnimatedStyle(() => ({
-    opacity: 0.6 * (1 - pulse.value),
-    transform: [{ scale: 1 + pulse.value * RING_GROWTH }],
+
+  const ringOne = useAnimatedStyle(() => ringStyle(pulse.value, 0));
+  const ringTwo = useAnimatedStyle(() => ringStyle(pulse.value, 1 / 3));
+  const ringThree = useAnimatedStyle(() => ringStyle(pulse.value, 2 / 3));
+
+  const haloStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(Math.cos(pulse.value * Math.PI * 6), [-1, 1], [0.18, 0.4]),
   }));
-  const outerRing = useAnimatedStyle(() => {
-    const shifted = (pulse.value + 0.5) % 1;
-    return {
-      opacity: 0.45 * (1 - shifted),
-      transform: [{ scale: 1 + shifted * RING_GROWTH }],
-    };
-  });
   const coreStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: 1 + 0.05 * Math.sin(pulse.value * Math.PI * 2) }],
+    transform: [{ scale: 1 + 0.04 * Math.cos(pulse.value * Math.PI * 6) }],
   }));
 
   if (!visible) return null;
+
+  const ringBase = {
+    position: 'absolute' as const,
+    height: CORE_SIZE,
+    width: CORE_SIZE,
+    borderRadius: CORE_SIZE / 2,
+    borderWidth: 1.5,
+    borderColor: palette.brand,
+  };
 
   return (
     <AnimatedView
@@ -95,23 +121,24 @@ export function MoodGate() {
         showsVerticalScrollIndicator={false}
       >
         <View
-          style={{ height: CORE_SIZE * 2.4, width: CORE_SIZE * 2.4 }}
+          style={{ height: STAGE_SIZE, width: STAGE_SIZE }}
           className="items-center justify-center"
         >
           <AnimatedView
             style={[
-              { height: CORE_SIZE, width: CORE_SIZE, borderRadius: CORE_SIZE / 2 },
-              outerRing,
+              {
+                position: 'absolute',
+                height: CORE_SIZE * 1.7,
+                width: CORE_SIZE * 1.7,
+                borderRadius: CORE_SIZE,
+              },
+              haloStyle,
             ]}
-            className="border-brand absolute border-2"
+            className="bg-brand-tint"
           />
-          <AnimatedView
-            style={[
-              { height: CORE_SIZE, width: CORE_SIZE, borderRadius: CORE_SIZE / 2 },
-              innerRing,
-            ]}
-            className="border-brand absolute border-2"
-          />
+          <AnimatedView style={[ringBase, ringThree]} />
+          <AnimatedView style={[ringBase, ringTwo]} />
+          <AnimatedView style={[ringBase, ringOne]} />
           <AnimatedView
             style={[
               { height: CORE_SIZE, width: CORE_SIZE, borderRadius: CORE_SIZE / 2 },
@@ -119,19 +146,18 @@ export function MoodGate() {
             ]}
             className="bg-brand items-center justify-center"
           >
-            <PulseLogo size={CORE_SIZE * 0.62} color={palette.onBrand} strokeWidth={1.9} />
+            <PulseLogo size={CORE_SIZE * 0.58} color={palette.onBrand} strokeWidth={1.8} />
           </AnimatedView>
         </View>
 
-        <Text className="text-brand-ink text-[11px] font-semibold tracking-[1.6px] uppercase">
+        <Text className="text-brand-ink mt-2 text-[11px] font-semibold tracking-[1.6px] uppercase">
           NightPulse Berlin
         </Text>
         <Text className="text-ink mt-2 text-center text-[28px] leading-[33px] font-semibold tracking-[-0.7px]">
           What are you up for today?
         </Text>
         <Text className="text-ink-soft mt-2 max-w-[320px] text-center text-[14px] leading-[20px]">
-          Pick tonight&apos;s mood. Your music taste stays in your profile — this is just about how
-          you feel.
+          Pick tonight&apos;s mood. Your music taste stays in your profile.
         </Text>
 
         <View className="mt-7 w-full flex-row flex-wrap justify-center gap-2">

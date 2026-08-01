@@ -1,3 +1,4 @@
+import { organizerKey } from './favoritesStore';
 import { GENRE_LABELS, VIBE_LABELS, resolveGenres, resolveVibes } from './taxonomy';
 import type { EventRow, ScoredEvent } from './types';
 
@@ -9,11 +10,14 @@ export interface RankOptions {
   districts: string[];
   maxPrice: number | null;
   freeOnly: boolean;
+  /** Normalised keys of the organisers the user hearted. */
+  favorites: string[];
 }
 
 const GENRE_WEIGHT = 4;
 const VIBE_WEIGHT = 5;
 const DISTRICT_WEIGHT = 2;
+const FAVORITE_WEIGHT = 8;
 
 function intersect(left: string[], right: string[]): string[] {
   if (!left.length || !right.length) return [];
@@ -39,14 +43,19 @@ export function scoreEvent(event: EventRow, options: RankOptions): ScoredEvent {
 
   const genreHits = intersect(eventGenres, options.genres);
   const vibeHits = intersect(eventVibes, options.vibes);
+  const favoriteHit = options.favorites.includes(
+    organizerKey(event.organizer_name ?? event.venue_name),
+  );
 
   let score = genreHits.length * GENRE_WEIGHT + vibeHits.length * VIBE_WEIGHT;
 
   const districtHit = Boolean(event.district && options.districts.includes(event.district));
   if (districtHit) score += DISTRICT_WEIGHT;
+  if (favoriteHit) score += FAVORITE_WEIGHT;
   if (event.is_free) score += 1;
 
   const reasons: string[] = [];
+  if (favoriteHit) reasons.push('Saved organiser');
   if (genreHits.length) {
     reasons.push(genreHits.map((id) => GENRE_LABELS[id] ?? id).join(' · '));
   }
@@ -55,14 +64,17 @@ export function scoreEvent(event: EventRow, options: RankOptions): ScoredEvent {
   }
   if (districtHit && event.district) reasons.push(event.district);
 
-  return { event, score, genreHits, vibeHits, reasons, isRecommended: false };
+  return { event, score, genreHits, vibeHits, favoriteHit, reasons, isRecommended: false };
 }
 
 /**
  * True when an event is a real recommendation rather than just "also happening".
- * Genres and vibes are independent gates: whichever the user set has to match.
+ * A hearted organiser always qualifies; otherwise genres and vibes are
+ * independent gates and whichever the user set has to match.
  */
 export function isRecommended(scored: ScoredEvent, options: RankOptions): boolean {
+  if (scored.favoriteHit) return true;
+
   const hasGenres = options.genres.length > 0;
   const hasVibes = options.vibes.length > 0;
   if (!hasGenres && !hasVibes) return false;
@@ -83,7 +95,8 @@ function byTime(left: ScoredEvent, right: ScoredEvent): number {
 }
 
 export function rankEvents(events: EventRow[], options: RankOptions): RankedFeed {
-  const hasTaste = options.genres.length > 0 || options.vibes.length > 0;
+  const hasTaste =
+    options.genres.length > 0 || options.vibes.length > 0 || options.favorites.length > 0;
   const scored = events
     .filter((event) => passesProfileFilters(event, options))
     .map((event) => {

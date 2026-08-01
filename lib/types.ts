@@ -47,6 +47,8 @@ export interface ScoredEvent {
   genreHits: string[];
   /** Vibe ids from the top-bar filter that matched this event. */
   vibeHits: string[];
+  /** True when the organiser is saved as a favourite. */
+  favoriteHit: boolean;
   reasons: string[];
   /** True when this counts as a real recommendation, not just "also happening". */
   isRecommended: boolean;

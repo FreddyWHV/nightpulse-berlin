@@ -54,9 +54,11 @@ export function EventCard({ item, onPress, highlight = false, compact = false }:
     >
       <View className="flex-1">
         <View className="flex-row items-center gap-1.5">
-          {highlight ? (
+          {item.favoriteHit || highlight ? (
             <>
-              <Text className="text-brand-ink text-[12px] font-semibold">For you</Text>
+              <Text className="text-brand-ink text-[12px] font-semibold">
+                {item.favoriteHit ? 'Saved' : 'For you'}
+              </Text>
               <View className="bg-line-strong h-[3px] w-[3px] rounded-full" />
             </>
           ) : null}
@@ -94,13 +96,7 @@ export function EventCard({ item, onPress, highlight = false, compact = false }:
         ) : null}
       </View>
 
-      <EventCover
-        event={event}
-        width={coverSize}
-        height={coverSize}
-        rounded="rounded-2xl"
-        monogramSize={14}
-      />
+      <EventCover event={event} width={coverSize} height={coverSize} rounded="rounded-2xl" />
     </Pressable>
   );
 }

@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Clock, ExternalLink, MapPin, Ticket, X } from 'lucide-react-native';
 
 import { EventCover } from '@/components/EventCover';
+import { FavoriteButton } from '@/components/FavoriteButton';
 import { OrganizerBadge } from '@/components/OrganizerBadge';
 import MapView from '@/components/MapView';
 import { SafeAreaView } from '@/components/ui/primitives/SafeAreaView';
@@ -117,7 +118,7 @@ export default function EventDetailScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View className="pt-safe-offset-3 px-4">
-          <EventCover event={event} height={220} rounded="rounded-3xl" monogramSize={34} />
+          <EventCover event={event} height={220} rounded="rounded-3xl" />
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Close"
@@ -142,12 +143,23 @@ export default function EventDetailScreen() {
           </Text>
 
           <View className="mt-4">
-            <OrganizerBadge
-              name={organizer}
-              imageUrl={event.organizer_image_url}
-              size={40}
-              textClassName="text-ink text-[14px] font-semibold"
-            />
+            <View className="flex-row items-start justify-between gap-3">
+              <View className="flex-1">
+                <OrganizerBadge
+                  name={organizer}
+                  imageUrl={event.organizer_image_url}
+                  size={40}
+                  showFavoriteMark={false}
+                  textClassName="text-ink text-[14px] font-semibold"
+                />
+              </View>
+              <FavoriteButton
+                name={organizer}
+                district={event.district}
+                imageUrl={event.organizer_image_url}
+                variant="pill"
+              />
+            </View>
             <Text className="text-ink-soft mt-2 text-[12.5px] leading-[18px]">
               {[event.venue_name, event.address].filter(Boolean).join(', ') || 'Berlin'}
             </Text>

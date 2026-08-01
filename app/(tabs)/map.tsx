@@ -5,6 +5,7 @@ import { X } from 'lucide-react-native';
 
 import { DayPickerSheet } from '@/components/DayPickerSheet';
 import { EventCard } from '@/components/EventCard';
+import { FavoriteButton } from '@/components/FavoriteButton';
 import { FilterHeader } from '@/components/FilterHeader';
 import { useTabBarClearance } from '@/components/FloatingTabBar';
 import { VibePickerSheet } from '@/components/VibePickerSheet';
@@ -28,6 +29,9 @@ interface VenueGroup {
   latitude: number;
   longitude: number;
   venueName: string;
+  /** Organiser behind this place — what the heart saves. */
+  organizerName: string | null;
+  organizerImageUrl: string | null;
   district: string | null;
   events: ScoredEvent[];
   /** True when at least one event here matches the profile. */
@@ -59,6 +63,8 @@ function groupByVenue(entries: ScoredEvent[]): VenueGroup[] {
       latitude,
       longitude,
       venueName: entry.event.venue_name ?? entry.event.organizer_name ?? 'Berlin',
+      organizerName: entry.event.organizer_name ?? entry.event.venue_name,
+      organizerImageUrl: entry.event.organizer_image_url,
       district: entry.event.district,
       events: [entry],
       recommended: entry.isRecommended,
@@ -181,14 +187,22 @@ export default function MapScreen() {
                     .join(' · ')}
                 </Text>
               </View>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Close venue"
-                onPress={() => setActiveId(null)}
-                className="border-line h-8 w-8 items-center justify-center rounded-full border active:opacity-70"
-              >
-                <X color={palette.inkSoft} size={16} />
-              </Pressable>
+              <View className="flex-row items-center gap-2">
+                <FavoriteButton
+                  name={active.organizerName}
+                  district={active.district}
+                  imageUrl={active.organizerImageUrl}
+                  size={32}
+                />
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Close venue"
+                  onPress={() => setActiveId(null)}
+                  className="border-line h-8 w-8 items-center justify-center rounded-full border active:opacity-70"
+                >
+                  <X color={palette.inkSoft} size={16} />
+                </Pressable>
+              </View>
             </View>
 
             <ScrollView

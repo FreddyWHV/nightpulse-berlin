@@ -1,5 +1,7 @@
+import { useMemo } from 'react';
 import {
   ActivityIndicator,
+  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -10,12 +12,15 @@ import {
 import { Input, Label, Switch, TextField } from 'heroui-native';
 import { RotateCcw } from 'lucide-react-native';
 
+import { FavoriteButton } from '@/components/FavoriteButton';
 import { PulseBadge } from '@/components/PulseLogo';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { SelectChip } from '@/components/SelectChip';
 import { useTabBarClearance } from '@/components/FloatingTabBar';
 import { SafeAreaView } from '@/components/ui/primitives/SafeAreaView';
+import { mockAvatarFor } from '@/lib/avatars';
 import { palette } from '@/lib/colors';
+import { sortFavorites, useFavoritesStore } from '@/lib/favoritesStore';
 import { useProfileStore } from '@/lib/profileStore';
 import { BERLIN_DISTRICTS, GENRE_GROUPS, GENRES } from '@/lib/taxonomy';
 
@@ -61,17 +66,24 @@ export default function ProfileScreen() {
   const setFreeOnly = useProfileStore((state) => state.setFreeOnly);
   const reset = useProfileStore((state) => state.reset);
 
+  const favoriteItems = useFavoritesStore((state) => state.items);
+  const favoritesHydrated = useFavoritesStore((state) => state.hydrated);
+  const favorites = useMemo(() => sortFavorites(favoriteItems), [favoriteItems]);
+
   const tabBarClearance = useTabBarClearance();
 
   const summary = [
     genres.length
       ? `${genres.length} ${genres.length === 1 ? 'genre' : 'genres'}`
       : 'No genres yet',
+    favorites.length ? `${favorites.length} saved` : null,
     districts.length ? `${districts.length} districts` : 'All of Berlin',
     maxPrice == null ? 'Any budget' : `Up to €${maxPrice}`,
-  ].join(' · ');
+  ]
+    .filter(Boolean)
+    .join(' · ');
 
-  if (!hydrated) {
+  if (!hydrated || !favoritesHydrated) {
     return (
       <SafeAreaView edges={['top']} className="bg-canvas flex-1 items-center justify-center">
         <ActivityIndicator color={palette.brandInk} />
@@ -114,6 +126,52 @@ export default function ProfileScreen() {
                 returnKeyType="done"
               />
             </TextField>
+          </Section>
+
+          <Section
+            title="Saved organisers"
+            caption="Hearted venues and promoters always land in your kind of night."
+          >
+            {favorites.length ? (
+              <View className="border-line border-t">
+                {favorites.map((favorite) => (
+                  <View
+                    key={favorite.key}
+                    className="border-line flex-row items-center gap-3 border-b py-3"
+                  >
+                    <Image
+                      source={
+                        favorite.imageUrl
+                          ? { uri: favorite.imageUrl }
+                          : mockAvatarFor(favorite.name)
+                      }
+                      style={{ width: 38, height: 38, borderRadius: 19 }}
+                      resizeMode="cover"
+                      className="bg-surface"
+                    />
+                    <View className="flex-1">
+                      <Text numberOfLines={1} className="text-ink text-[14.5px] font-semibold">
+                        {favorite.name}
+                      </Text>
+                      <Text className="text-ink-soft mt-0.5 text-[12px]">
+                        {favorite.district ?? 'Berlin'}
+                      </Text>
+                    </View>
+                    <FavoriteButton
+                      name={favorite.name}
+                      district={favorite.district}
+                      imageUrl={favorite.imageUrl}
+                      size={32}
+                    />
+                  </View>
+                ))}
+              </View>
+            ) : (
+              <Text className="text-ink-soft text-[13px] leading-[19px]">
+                Nothing saved yet. Tap the heart on an event or on a place on the map to follow its
+                organiser.
+              </Text>
+            )}
           </Section>
 
           <Section
