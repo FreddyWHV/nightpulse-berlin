@@ -3,7 +3,7 @@ import { Pressable, Text, View } from 'react-native';
 import { EventCover } from '@/components/EventCover';
 import { OrganizerBadge } from '@/components/OrganizerBadge';
 import { formatPrice, formatTimeRange } from '@/lib/dates';
-import { INTEREST_LABELS, VIBE_LABELS, resolveInterests, resolveVibes } from '@/lib/taxonomy';
+import { GENRE_LABELS, VIBE_LABELS, resolveGenres, resolveVibes } from '@/lib/taxonomy';
 import type { ScoredEvent } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -18,13 +18,13 @@ interface EventCardProps {
 
 function tagsOf(item: ScoredEvent): string[] {
   const matched = [
-    ...item.interestHits.map((id) => INTEREST_LABELS[id] ?? id),
+    ...item.genreHits.map((id) => GENRE_LABELS[id] ?? id),
     ...item.vibeHits.map((id) => VIBE_LABELS[id] ?? id),
   ];
   if (matched.length) return [...new Set(matched)].slice(0, 3);
 
   const derived = [
-    ...resolveInterests(item.event.category).map((id) => INTEREST_LABELS[id] ?? id),
+    ...resolveGenres(item.event.category).map((id) => GENRE_LABELS[id] ?? id),
     ...resolveVibes(item.event.vibe_tags).map((id) => VIBE_LABELS[id] ?? id),
   ];
   if (derived.length) return [...new Set(derived)].slice(0, 3);
@@ -95,7 +95,7 @@ export function EventCard({ item, onPress, highlight = false, compact = false }:
         <View className="mt-3 flex-row flex-wrap items-center gap-1.5">
           {highlight ? (
             <View className="bg-brand-tint rounded-full px-2.5 py-[5px]">
-              <Text className="text-brand text-[11px] font-semibold">Für dich</Text>
+              <Text className="text-brand text-[11px] font-semibold">For you</Text>
             </View>
           ) : null}
           {tags.map((tag) => (

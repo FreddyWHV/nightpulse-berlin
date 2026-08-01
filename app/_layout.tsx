@@ -27,6 +27,7 @@ import { initPostHog } from '@/lib/posthog';
 import { registerServiceWorker } from '@/lib/registerServiceWorker';
 import { reportErrorToParent } from '@/lib/reportPreviewError';
 import { InstallPrompt } from '@/components/InstallPrompt';
+import { MoodGate } from '@/components/MoodGate';
 import { palette } from '@/lib/colors';
 
 const queryClient = new QueryClient({
@@ -159,6 +160,7 @@ export default function RootLayout() {
               }}
             />
           </Stack>
+          <MoodGate />
           <InstallPrompt />
         </HeroUINativeProvider>
       </QueryClientProvider>

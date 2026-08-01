@@ -18,8 +18,7 @@ export function useNightFilter() {
   const day = useFilterStore((state) => state.day);
   const vibes = useFilterStore((state) => state.vibes);
 
-  const interests = useProfileStore((state) => state.interests);
-  const profileVibes = useProfileStore((state) => state.vibes);
+  const genres = useProfileStore((state) => state.genres);
   const districts = useProfileStore((state) => state.districts);
   const maxPrice = useProfileStore((state) => state.maxPrice);
   const freeOnly = useProfileStore((state) => state.freeOnly);
@@ -37,20 +36,13 @@ export function useNightFilter() {
 
   const ranked = useMemo(() => {
     const nightEvents = events.filter((event) => nightKeyOf(event.starts_at) === day);
-    return rankEvents(nightEvents, {
-      interests,
-      profileVibes,
-      selectedVibes: vibes,
-      districts,
-      maxPrice,
-      freeOnly,
-    });
-  }, [events, day, interests, profileVibes, vibes, districts, maxPrice, freeOnly]);
+    return rankEvents(nightEvents, { genres, vibes, districts, maxPrice, freeOnly });
+  }, [events, day, genres, vibes, districts, maxPrice, freeOnly]);
 
   const selectedDate = useMemo(() => parseISO(day), [day]);
 
   const vibeLabel = useMemo(() => {
-    if (vibes.length === 0) return 'Wonach ist dir?';
+    if (vibes.length === 0) return 'Any vibe';
     const first = VIBE_LABELS[vibes[0]] ?? vibes[0];
     return vibes.length === 1 ? first : `${first} +${vibes.length - 1}`;
   }, [vibes]);
@@ -66,6 +58,6 @@ export function useNightFilter() {
     dateLabel: formatDayButton(selectedDate),
     vibeLabel,
     ranked,
-    hasProfile: interests.length > 0 || profileVibes.length > 0,
+    hasProfile: genres.length > 0,
   };
 }

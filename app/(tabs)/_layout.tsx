@@ -35,14 +35,14 @@ export default function TabLayout() {
         <Tabs.Screen
           name="map"
           options={{
-            title: 'Karte',
+            title: 'Map',
             tabBarIcon: ({ color, size }) => <Map color={color} size={size ?? 22} />,
           }}
         />
         <Tabs.Screen
           name="profile"
           options={{
-            title: 'Profil',
+            title: 'Profile',
             tabBarIcon: ({ color, size }) => <UserRound color={color} size={size ?? 22} />,
           }}
         />

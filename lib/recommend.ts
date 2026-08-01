@@ -1,20 +1,18 @@
-import { INTEREST_LABELS, VIBE_LABELS, resolveInterests, resolveVibes } from './taxonomy';
+import { GENRE_LABELS, VIBE_LABELS, resolveGenres, resolveVibes } from './taxonomy';
 import type { EventRow, ScoredEvent } from './types';
 
 export interface RankOptions {
-  interests: string[];
-  /** Vibes stored in the profile. */
-  profileVibes: string[];
-  /** Vibes selected in the feed filter for tonight. */
-  selectedVibes: string[];
+  /** Music genres from the profile — the only place taste is stored. */
+  genres: string[];
+  /** Vibes picked in the feed/map top bar for this night. */
+  vibes: string[];
   districts: string[];
   maxPrice: number | null;
   freeOnly: boolean;
 }
 
-const INTEREST_WEIGHT = 4;
-const SELECTED_VIBE_WEIGHT = 5;
-const PROFILE_VIBE_WEIGHT = 2;
+const GENRE_WEIGHT = 4;
+const VIBE_WEIGHT = 5;
 const DISTRICT_WEIGHT = 2;
 
 function intersect(left: string[], right: string[]): string[] {
@@ -36,61 +34,47 @@ export function passesProfileFilters(event: EventRow, options: RankOptions): boo
 }
 
 export function scoreEvent(event: EventRow, options: RankOptions): ScoredEvent {
-  const eventInterests = resolveInterests(event.category);
+  const eventGenres = resolveGenres(event.category);
   const eventVibes = resolveVibes(event.vibe_tags);
 
-  const interestHits = intersect(eventInterests, options.interests);
-  const selectedVibeHits = intersect(eventVibes, options.selectedVibes);
-  const profileVibeHits = intersect(eventVibes, options.profileVibes).filter(
-    (vibe) => !options.selectedVibes.includes(vibe),
-  );
+  const genreHits = intersect(eventGenres, options.genres);
+  const vibeHits = intersect(eventVibes, options.vibes);
 
-  let score = interestHits.length * INTEREST_WEIGHT;
-  score += selectedVibeHits.length * SELECTED_VIBE_WEIGHT;
-  score += profileVibeHits.length * PROFILE_VIBE_WEIGHT;
+  let score = genreHits.length * GENRE_WEIGHT + vibeHits.length * VIBE_WEIGHT;
 
   const districtHit = Boolean(event.district && options.districts.includes(event.district));
   if (districtHit) score += DISTRICT_WEIGHT;
   if (event.is_free) score += 1;
 
   const reasons: string[] = [];
-  if (interestHits.length) {
-    reasons.push(interestHits.map((id) => INTEREST_LABELS[id] ?? id).join(' · '));
+  if (genreHits.length) {
+    reasons.push(genreHits.map((id) => GENRE_LABELS[id] ?? id).join(' · '));
   }
-  const vibeReasons = [...selectedVibeHits, ...profileVibeHits];
-  if (vibeReasons.length) {
-    reasons.push(vibeReasons.map((id) => VIBE_LABELS[id] ?? id).join(' · '));
+  if (vibeHits.length) {
+    reasons.push(vibeHits.map((id) => VIBE_LABELS[id] ?? id).join(' · '));
   }
   if (districtHit && event.district) reasons.push(event.district);
 
-  return {
-    event,
-    score,
-    interestHits,
-    vibeHits: [...selectedVibeHits, ...profileVibeHits],
-    reasons,
-  };
+  return { event, score, genreHits, vibeHits, reasons };
 }
 
 /**
  * True when an event is a real recommendation rather than just "also happening".
- * Requires an interest match, and a vibe match whenever vibes are selected.
+ * Genres and vibes are independent gates: whichever the user set has to match.
  */
 export function isRecommended(scored: ScoredEvent, options: RankOptions): boolean {
-  const hasTaste = options.interests.length > 0 || options.profileVibes.length > 0;
-  if (!hasTaste) return false;
-
-  if (options.selectedVibes.length > 0 && scored.vibeHits.length === 0) return false;
-  if (options.interests.length > 0 && scored.interestHits.length === 0) {
-    // Allow strong vibe-only matches through when the vibe was picked explicitly.
-    return scored.vibeHits.length > 0 && options.selectedVibes.length > 0;
-  }
-  return scored.score > 0;
+  const hasGenres = options.genres.length > 0;
+  const hasVibes = options.vibes.length > 0;
+  if (!hasGenres && !hasVibes) return false;
+  if (hasGenres && scored.genreHits.length === 0) return false;
+  if (hasVibes && scored.vibeHits.length === 0) return false;
+  return true;
 }
 
 export interface RankedFeed {
   recommended: ScoredEvent[];
   others: ScoredEvent[];
+  /** True when the user gave us something to match against. */
   hasTaste: boolean;
 }
 
@@ -99,7 +83,7 @@ function byTime(left: ScoredEvent, right: ScoredEvent): number {
 }
 
 export function rankEvents(events: EventRow[], options: RankOptions): RankedFeed {
-  const hasTaste = options.interests.length > 0 || options.profileVibes.length > 0;
+  const hasTaste = options.genres.length > 0 || options.vibes.length > 0;
   const scored = events
     .filter((event) => passesProfileFilters(event, options))
     .map((event) => scoreEvent(event, options));

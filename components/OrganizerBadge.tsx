@@ -8,7 +8,7 @@ interface OrganizerBadgeProps {
   /** Organiser photo or logo. Falls back to a monogram chip. */
   imageUrl?: string | null;
   size?: number;
-  /** Text in front of the name, e.g. "Veranstalter". */
+  /** Text in front of the name, e.g. "Hosted by". */
   prefix?: string;
   /** Text after the name, e.g. the district. */
   suffix?: string | null;

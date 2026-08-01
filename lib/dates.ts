@@ -1,46 +1,46 @@
 import { addDays, endOfMonth, format, isSameDay, startOfDay, startOfMonth } from 'date-fns';
 
 /**
- * German labels are kept local on purpose: importing `date-fns/locale` pulls in
- * every locale of the package and breaks Metro's web bundle.
+ * Labels are kept local on purpose: importing `date-fns/locale` pulls in every
+ * locale of the package and breaks Metro's web bundle.
  */
-const WEEKDAYS_SHORT = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'] as const;
+const WEEKDAYS_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 const WEEKDAYS_LONG = [
-  'Sonntag',
-  'Montag',
-  'Dienstag',
-  'Mittwoch',
-  'Donnerstag',
-  'Freitag',
-  'Samstag',
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
 ] as const;
 const MONTHS_SHORT = [
   'Jan',
   'Feb',
-  'Mär',
+  'Mar',
   'Apr',
-  'Mai',
+  'May',
   'Jun',
   'Jul',
   'Aug',
   'Sep',
-  'Okt',
+  'Oct',
   'Nov',
-  'Dez',
+  'Dec',
 ] as const;
 const MONTHS_LONG = [
-  'Januar',
-  'Februar',
-  'März',
+  'January',
+  'February',
+  'March',
   'April',
-  'Mai',
-  'Juni',
-  'Juli',
+  'May',
+  'June',
+  'July',
   'August',
   'September',
-  'Oktober',
+  'October',
   'November',
-  'Dezember',
+  'December',
 ] as const;
 
 /**
@@ -53,7 +53,7 @@ export interface DayOption {
   /** yyyy-MM-dd of the calendar day the night starts on. */
   key: string;
   date: Date;
-  /** "Heute", "Morgen" or short weekday. */
+  /** "Today", "Tomorrow" or short weekday. */
   label: string;
   dayNumber: string;
   month: string;
@@ -66,7 +66,7 @@ export function dayKey(date: Date): string {
 
 /**
  * Calendar day the night around `timestamp` started on. At 02:00 this still
- * returns the previous evening, which is what people mean by "heute Nacht".
+ * returns the previous evening, which is what people mean by "tonight".
  */
 export function nightDateOf(timestamp: Date = new Date()): Date {
   return startOfDay(new Date(timestamp.getTime() - NIGHT_START_HOUR * 60 * 60 * 1000));
@@ -92,8 +92,8 @@ export function buildDayOptions(count = 14, from: Date = new Date()): DayOption[
     const date = addDays(first, index);
     const weekday = date.getDay();
     let label: string = WEEKDAYS_SHORT[weekday];
-    if (index === 0) label = 'Heute';
-    else if (index === 1) label = 'Morgen';
+    if (index === 0) label = 'Today';
+    else if (index === 1) label = 'Tomorrow';
 
     return {
       key: dayKey(date),
@@ -108,17 +108,17 @@ export function buildDayOptions(count = 14, from: Date = new Date()): DayOption[
 
 export function formatDayHeadline(date: Date): string {
   const tonight = nightDateOf();
-  if (isSameDay(date, tonight)) return 'Heute Abend';
-  if (isSameDay(date, addDays(tonight, 1))) return 'Morgen Abend';
-  return `${WEEKDAYS_LONG[date.getDay()]}, ${date.getDate()}. ${MONTHS_LONG[date.getMonth()]}`;
+  if (isSameDay(date, tonight)) return 'Tonight in Berlin';
+  if (isSameDay(date, addDays(tonight, 1))) return 'Tomorrow night';
+  return `${WEEKDAYS_LONG[date.getDay()]}, ${date.getDate()} ${MONTHS_LONG[date.getMonth()]}`;
 }
 
-/** Compact label for the date filter button: "Heute", "Morgen", "Sa, 4. Okt". */
+/** Compact label for the date filter button: "Today", "Tomorrow", "Sat, 4 Oct". */
 export function formatDayButton(date: Date): string {
   const tonight = nightDateOf();
-  if (isSameDay(date, tonight)) return 'Heute';
-  if (isSameDay(date, addDays(tonight, 1))) return 'Morgen';
-  return `${WEEKDAYS_SHORT[date.getDay()]}, ${date.getDate()}. ${MONTHS_SHORT[date.getMonth()]}`;
+  if (isSameDay(date, tonight)) return 'Today';
+  if (isSameDay(date, addDays(tonight, 1))) return 'Tomorrow';
+  return `${WEEKDAYS_SHORT[date.getDay()]}, ${date.getDate()} ${MONTHS_SHORT[date.getMonth()]}`;
 }
 
 export function formatMonthTitle(date: Date): string {
@@ -126,7 +126,7 @@ export function formatMonthTitle(date: Date): string {
 }
 
 /** Monday-first weekday initials for calendar headers. */
-export const WEEKDAY_INITIALS = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'] as const;
+export const WEEKDAY_INITIALS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'] as const;
 
 export interface CalendarCell {
   /** Stable key for rendering. */
@@ -179,7 +179,7 @@ export function formatTime(timestamp: string): string {
 
 export function formatDateTime(timestamp: string): string {
   const date = new Date(timestamp);
-  return `${WEEKDAYS_LONG[date.getDay()]}, ${date.getDate()}. ${MONTHS_SHORT[date.getMonth()]} · ${format(date, 'HH:mm')}`;
+  return `${WEEKDAYS_LONG[date.getDay()]}, ${date.getDate()} ${MONTHS_SHORT[date.getMonth()]} · ${format(date, 'HH:mm')}`;
 }
 
 export function formatPrice(
@@ -187,11 +187,11 @@ export function formatPrice(
   priceMax: number | null,
   isFree: boolean | null,
 ): string {
-  if (isFree) return 'Eintritt frei';
-  if (priceMin == null && priceMax == null) return 'Preis tbd';
+  if (isFree) return 'Free entry';
+  if (priceMin == null && priceMax == null) return 'Price TBA';
   if (priceMin != null && priceMax != null && priceMax > priceMin) {
-    return `${Math.round(priceMin)}–${Math.round(priceMax)} €`;
+    return `€${Math.round(priceMin)}–${Math.round(priceMax)}`;
   }
   const value = priceMin ?? priceMax;
-  return value === 0 ? 'Eintritt frei' : `ab ${Math.round(value ?? 0)} €`;
+  return value === 0 ? 'Free entry' : `from €${Math.round(value ?? 0)}`;
 }

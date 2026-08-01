@@ -2,17 +2,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
+/**
+ * The profile only stores lasting taste: music genres, districts, budget.
+ * Vibes are a per-night decision and live in `filterStore` instead.
+ */
 export interface ProfileState {
   displayName: string;
-  interests: string[];
-  vibes: string[];
+  /** Canonical music genre ids from `lib/taxonomy`. */
+  genres: string[];
   districts: string[];
   /** null = no budget limit. */
   maxPrice: number | null;
   freeOnly: boolean;
   setDisplayName: (value: string) => void;
-  toggleInterest: (id: string) => void;
-  toggleVibe: (id: string) => void;
+  toggleGenre: (id: string) => void;
   toggleDistrict: (id: string) => void;
   setMaxPrice: (value: number | null) => void;
   setFreeOnly: (value: boolean) => void;
@@ -25,8 +28,7 @@ function toggle(list: string[], id: string): string[] {
 
 const INITIAL = {
   displayName: '',
-  interests: [] as string[],
-  vibes: [] as string[],
+  genres: [] as string[],
   districts: [] as string[],
   maxPrice: null as number | null,
   freeOnly: false,
@@ -37,20 +39,19 @@ export const useProfileStore = create<ProfileState>()(
     (set) => ({
       ...INITIAL,
       setDisplayName: (value) => set({ displayName: value }),
-      toggleInterest: (id) => set((state) => ({ interests: toggle(state.interests, id) })),
-      toggleVibe: (id) => set((state) => ({ vibes: toggle(state.vibes, id) })),
+      toggleGenre: (id) => set((state) => ({ genres: toggle(state.genres, id) })),
       toggleDistrict: (id) => set((state) => ({ districts: toggle(state.districts, id) })),
       setMaxPrice: (value) => set({ maxPrice: value }),
       setFreeOnly: (value) => set({ freeOnly: value }),
       reset: () => set({ ...INITIAL }),
     }),
     {
-      name: 'nachtplan-profile',
+      // v2: vibes moved out of the profile, interests renamed to genres.
+      name: 'nightpulse-profile-v2',
       storage: createJSONStorage(() => AsyncStorage),
       partialize: (state) => ({
         displayName: state.displayName,
-        interests: state.interests,
-        vibes: state.vibes,
+        genres: state.genres,
         districts: state.districts,
         maxPrice: state.maxPrice,
         freeOnly: state.freeOnly,

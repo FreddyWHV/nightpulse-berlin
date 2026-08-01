@@ -4,7 +4,7 @@ import coverBar from '@/assets/covers/cover-bar.png';
 import coverClub from '@/assets/covers/cover-club.png';
 import coverLive from '@/assets/covers/cover-live.png';
 import { LinearGradient } from '@/components/ui/primitives/LinearGradient';
-import { resolveInterests, resolveVibes } from '@/lib/taxonomy';
+import { resolveVibes } from '@/lib/taxonomy';
 import type { EventRow } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -16,13 +16,12 @@ const FALLBACKS = {
 
 /** Picks the mood image used when an event brings no photo of its own. */
 function fallbackFor(event: EventRow): keyof typeof FALLBACKS {
-  const interests = resolveInterests(event.category);
   const vibes = resolveVibes(event.vibe_tags);
 
-  if (interests.includes('livekonzert') || vibes.includes('live')) return 'live';
+  if (vibes.includes('live') || vibes.includes('arts')) return 'live';
   if (
-    !vibes.includes('tanzen') &&
-    (vibes.includes('chill') || vibes.includes('schick') || vibes.includes('draussen'))
+    !vibes.includes('dancing') &&
+    (vibes.includes('chill') || vibes.includes('dressy') || vibes.includes('outdoors'))
   ) {
     return 'bar';
   }

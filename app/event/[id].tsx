@@ -10,7 +10,7 @@ import { SafeAreaView } from '@/components/ui/primitives/SafeAreaView';
 import { useEventFeed } from '@/hooks/useEvents';
 import { palette } from '@/lib/colors';
 import { formatDateTime, formatPrice, formatTime } from '@/lib/dates';
-import { INTEREST_LABELS, VIBE_LABELS, resolveInterests, resolveVibes } from '@/lib/taxonomy';
+import { GENRE_LABELS, VIBE_LABELS, resolveGenres, resolveVibes } from '@/lib/taxonomy';
 
 function InfoRow({
   icon,
@@ -82,14 +82,14 @@ export default function EventDetailScreen() {
     return (
       <SafeAreaView className="bg-canvas flex-1 items-center justify-center px-8">
         <Text className="text-ink-soft text-center text-[15px]">
-          Dieses Event ist nicht mehr verfügbar.
+          This event is not available any more.
         </Text>
         <Pressable
           onPress={() => router.back()}
           accessibilityRole="button"
           className="bg-brand mt-4 rounded-2xl px-5 py-3 active:opacity-80"
         >
-          <Text className="text-[14px] font-semibold text-white">Zurück</Text>
+          <Text className="text-[14px] font-semibold text-white">Back</Text>
         </Pressable>
       </SafeAreaView>
     );
@@ -97,7 +97,7 @@ export default function EventDetailScreen() {
 
   const tags = [
     ...new Set([
-      ...resolveInterests(event.category).map((tag) => INTEREST_LABELS[tag] ?? tag),
+      ...resolveGenres(event.category).map((tag) => GENRE_LABELS[tag] ?? tag),
       ...resolveVibes(event.vibe_tags).map((tag) => VIBE_LABELS[tag] ?? tag),
     ]),
   ];
@@ -132,7 +132,7 @@ export default function EventDetailScreen() {
           <EventCover event={event} height={220} rounded="rounded-3xl" monogramSize={34} />
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Schließen"
+            accessibilityLabel="Close"
             onPress={() => router.back()}
             className="absolute top-3 right-3 h-9 w-9 items-center justify-center rounded-full bg-black/45 active:opacity-70"
           >
@@ -140,7 +140,7 @@ export default function EventDetailScreen() {
           </Pressable>
           {event.image_source ? (
             <Text className="text-ink-faint mt-1.5 px-1 text-[10.5px]">
-              Foto: {event.image_source}
+              Photo: {event.image_source}
             </Text>
           ) : null}
         </View>
@@ -169,7 +169,7 @@ export default function EventDetailScreen() {
                 onPress={() => void Linking.openURL(event.venue_homepage ?? '')}
                 className="mt-2 self-start active:opacity-70"
               >
-                <Text className="text-brand text-[12.5px] font-semibold">Website öffnen</Text>
+                <Text className="text-brand text-[12.5px] font-semibold">Open website</Text>
               </Pressable>
             ) : null}
           </View>
@@ -194,17 +194,17 @@ export default function EventDetailScreen() {
         <View className="border-line bg-card mx-5 mt-5 rounded-3xl border px-4">
           <InfoRow
             icon={<Clock color={palette.brand} size={14} />}
-            label="Wann"
+            label="When"
             value={timeValue}
           />
           <InfoRow
             icon={<MapPin color={palette.brand} size={14} />}
-            label="Wo"
+            label="Where"
             value={[event.venue_name, event.district].filter(Boolean).join(' · ') || 'Berlin'}
           />
           <InfoRow
             icon={<Ticket color={palette.brand} size={14} />}
-            label="Eintritt"
+            label="Entry"
             value={formatPrice(event.price_min, event.price_max, event.is_free)}
             last={lineup.length === 0}
           />
@@ -222,13 +222,13 @@ export default function EventDetailScreen() {
           {ticketUrl ? (
             <ActionButton
               primary
-              label="Tickets & Infos"
+              label="Tickets & info"
               icon={<ExternalLink color="#FFFFFF" size={16} />}
               onPress={() => void Linking.openURL(ticketUrl)}
             />
           ) : null}
           <ActionButton
-            label="Route"
+            label="Directions"
             icon={<MapPin color={palette.ink} size={16} />}
             onPress={openMaps}
           />

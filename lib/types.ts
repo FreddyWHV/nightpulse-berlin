@@ -38,9 +38,9 @@ export interface EventRow {
 export interface ScoredEvent {
   event: EventRow;
   score: number;
-  /** Interest ids that matched this event. */
-  interestHits: string[];
-  /** Vibe ids that matched this event. */
+  /** Music genre ids from the profile that matched this event. */
+  genreHits: string[];
+  /** Vibe ids from the top-bar filter that matched this event. */
   vibeHits: string[];
   reasons: string[];
 }

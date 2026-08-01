@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 interface VibePickerSheetProps {
   isOpen: boolean;
   onOpenChange: (value: boolean) => void;
-  /** Selected vibe ids, empty = "Egal". */
+  /** Selected vibe ids, empty = any vibe. */
   value: string[];
   onToggle: (id: string) => void;
   onClear: () => void;
@@ -54,7 +54,7 @@ function OptionRow({
   );
 }
 
-/** Bottom sheet for the "Wonach ist dir?" filter button. */
+/** Bottom sheet behind the vibe filter button. Music genres live in the profile. */
 export function VibePickerSheet({
   isOpen,
   onOpenChange,
@@ -67,7 +67,7 @@ export function VibePickerSheet({
       <BottomSheet.Portal>
         <BottomSheet.Overlay />
         <BottomSheet.Content
-          snapPoints={['78%']}
+          snapPoints={['80%']}
           enableOverDrag={false}
           enableDynamicSizing={false}
           contentContainerClassName="h-full"
@@ -77,10 +77,10 @@ export function VibePickerSheet({
           <View className="flex-1">
             <View className="px-5 pb-3">
               <BottomSheet.Title className="text-ink text-[19px] font-semibold tracking-[-0.3px]">
-                Wonach ist dir?
+                What are you in the mood for?
               </BottomSheet.Title>
               <BottomSheet.Description className="text-ink-soft mt-1 text-[13px] leading-[18px]">
-                Mehrfachauswahl möglich. Der Feed sortiert danach, die Karte hebt Treffer hervor.
+                Pick as many as you like. The feed ranks by them, the map highlights the matches.
               </BottomSheet.Description>
             </View>
 
@@ -88,8 +88,8 @@ export function VibePickerSheet({
               contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 16, gap: 8 }}
             >
               <OptionRow
-                label="Egal"
-                hint="Alles zeigen, was läuft"
+                label="Anything"
+                hint="Show everything that is on"
                 selected={value.length === 0}
                 onPress={onClear}
               />
@@ -107,7 +107,9 @@ export function VibePickerSheet({
             <View className="border-line pb-safe-offset-4 border-t px-5 pt-3">
               <Button onPress={() => onOpenChange(false)}>
                 <Button.Label>
-                  {value.length ? `${value.length} Vibes übernehmen` : 'Alles anzeigen'}
+                  {value.length
+                    ? `Apply ${value.length} ${value.length === 1 ? 'vibe' : 'vibes'}`
+                    : 'Show everything'}
                 </Button.Label>
               </Button>
             </View>

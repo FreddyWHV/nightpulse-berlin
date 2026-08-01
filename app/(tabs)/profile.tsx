@@ -1,19 +1,20 @@
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 import { Input, Label, Switch, TextField } from 'heroui-native';
-import { RotateCcw } from 'lucide-react-native';
+import { RotateCcw, Sparkles } from 'lucide-react-native';
 
+import { PulseBadge } from '@/components/PulseLogo';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { SelectChip } from '@/components/SelectChip';
 import { SafeAreaView } from '@/components/ui/primitives/SafeAreaView';
 import { palette } from '@/lib/colors';
 import { useProfileStore } from '@/lib/profileStore';
-import { BERLIN_DISTRICTS, INTEREST_GROUPS, INTERESTS, VIBES } from '@/lib/taxonomy';
+import { BERLIN_DISTRICTS, GENRE_GROUPS, GENRES } from '@/lib/taxonomy';
 
 const BUDGETS: { label: string; value: number | null }[] = [
-  { label: 'Egal', value: null },
-  { label: 'bis 10 €', value: 10 },
-  { label: 'bis 20 €', value: 20 },
-  { label: 'bis 30 €', value: 30 },
+  { label: 'Any', value: null },
+  { label: 'Up to €10', value: 10 },
+  { label: 'Up to €20', value: 20 },
+  { label: 'Up to €30', value: 30 },
 ];
 
 function Section({
@@ -27,7 +28,7 @@ function Section({
 }) {
   return (
     <View className="px-5 pt-7">
-      <Text className="text-ink text-[17px] font-bold tracking-[-0.3px]">{title}</Text>
+      <Text className="text-ink text-[17px] font-semibold tracking-[-0.3px]">{title}</Text>
       {caption ? (
         <Text className="text-ink-soft mt-1 text-[13px] leading-[18px]">{caption}</Text>
       ) : null}
@@ -38,19 +39,23 @@ function Section({
 
 export default function ProfileScreen() {
   const displayName = useProfileStore((state) => state.displayName);
-  const interests = useProfileStore((state) => state.interests);
-  const vibes = useProfileStore((state) => state.vibes);
+  const genres = useProfileStore((state) => state.genres);
   const districts = useProfileStore((state) => state.districts);
   const maxPrice = useProfileStore((state) => state.maxPrice);
   const freeOnly = useProfileStore((state) => state.freeOnly);
 
   const setDisplayName = useProfileStore((state) => state.setDisplayName);
-  const toggleInterest = useProfileStore((state) => state.toggleInterest);
-  const toggleVibe = useProfileStore((state) => state.toggleVibe);
+  const toggleGenre = useProfileStore((state) => state.toggleGenre);
   const toggleDistrict = useProfileStore((state) => state.toggleDistrict);
   const setMaxPrice = useProfileStore((state) => state.setMaxPrice);
   const setFreeOnly = useProfileStore((state) => state.setFreeOnly);
   const reset = useProfileStore((state) => state.reset);
+
+  const stats = [
+    { label: 'Genres', value: String(genres.length) },
+    { label: 'Districts', value: String(districts.length || BERLIN_DISTRICTS.length) },
+    { label: 'Budget', value: maxPrice == null ? 'Any' : `€${maxPrice}` },
+  ];
 
   return (
     <SafeAreaView edges={['top']} className="bg-canvas flex-1">
@@ -64,41 +69,39 @@ export default function ProfileScreen() {
           keyboardShouldPersistTaps="handled"
         >
           <ScreenHeader
-            overline="Profil"
-            title={displayName ? `Moin, ${displayName}` : 'Dein Geschmack'}
-            subtitle="Alles hier fließt direkt in den Feed und die Karte ein."
-            right={
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Profil zurücksetzen"
-                onPress={reset}
-                className="border-line bg-card h-9 w-9 items-center justify-center rounded-full border active:opacity-70"
-              >
-                <RotateCcw color={palette.inkSoft} size={15} />
-              </Pressable>
-            }
+            overline="Profile"
+            title={displayName ? `Hey, ${displayName}` : 'Your music taste'}
+            subtitle="Genres, districts and budget shape the feed and the map."
+            right={<PulseBadge size={40} />}
           />
 
           <View className="border-line bg-card mx-5 flex-row gap-2 rounded-3xl border p-4">
-            {[
-              { label: 'Interessen', value: interests.length },
-              { label: 'Vibes', value: vibes.length },
-              { label: 'Bezirke', value: districts.length || BERLIN_DISTRICTS.length },
-            ].map((stat) => (
+            {stats.map((stat) => (
               <View key={stat.label} className="flex-1">
-                <Text className="text-brand text-[22px] font-bold">{stat.value}</Text>
+                <Text className="text-brand text-[22px] font-semibold">{stat.value}</Text>
                 <Text className="text-ink-soft mt-0.5 text-[12px]">{stat.label}</Text>
               </View>
             ))}
           </View>
 
-          <Section title="Name" caption="Optional, nur für die Begrüßung.">
+          <View className="border-brand-tint-strong bg-brand-tint mx-5 mt-3 flex-row gap-3 rounded-3xl border p-4">
+            <Sparkles color={palette.brand} size={18} />
+            <View className="flex-1">
+              <Text className="text-brand text-[14px] font-semibold">Vibes live on the feed</Text>
+              <Text className="text-ink-soft mt-0.5 text-[12.5px] leading-[18px]">
+                Music genres are the lasting part and stay here. What you feel like tonight is
+                picked at the top of the feed and the map.
+              </Text>
+            </View>
+          </View>
+
+          <Section title="Name" caption="Optional, only used for the greeting.">
             <TextField>
-              <Label>Wie sollen wir dich nennen?</Label>
+              <Label>What should we call you?</Label>
               <Input
                 value={displayName}
                 onChangeText={setDisplayName}
-                placeholder="z. B. Mara"
+                placeholder="e.g. Mara"
                 autoCapitalize="words"
                 autoCorrect={false}
                 returnKeyType="done"
@@ -107,23 +110,23 @@ export default function ProfileScreen() {
           </Section>
 
           <Section
-            title="Interessen"
-            caption="Musikrichtungen und Programm, die dich interessieren."
+            title="Music genres"
+            caption="Strictly music — pick everything you would dance to or watch live."
           >
             <View className="gap-5">
-              {INTEREST_GROUPS.map((group) => (
+              {GENRE_GROUPS.map((group) => (
                 <View key={group}>
                   <Text className="text-ink-faint mb-2.5 text-[11px] font-semibold tracking-[1.2px] uppercase">
                     {group}
                   </Text>
                   <View className="flex-row flex-wrap gap-2">
-                    {INTERESTS.filter((interest) => interest.group === group).map((interest) => (
+                    {GENRES.filter((genre) => genre.group === group).map((genre) => (
                       <SelectChip
-                        key={interest.id}
-                        label={interest.label}
+                        key={genre.id}
+                        label={genre.label}
                         size="sm"
-                        selected={interests.includes(interest.id)}
-                        onPress={() => toggleInterest(interest.id)}
+                        selected={genres.includes(genre.id)}
+                        onPress={() => toggleGenre(genre.id)}
                       />
                     ))}
                   </View>
@@ -132,21 +135,7 @@ export default function ProfileScreen() {
             </View>
           </Section>
 
-          <Section title="Vibes" caption="Wie soll ein Abend sich anfühlen?">
-            <View className="flex-row flex-wrap gap-2">
-              {VIBES.map((vibe) => (
-                <SelectChip
-                  key={vibe.id}
-                  label={vibe.label}
-                  hint={vibe.hint}
-                  selected={vibes.includes(vibe.id)}
-                  onPress={() => toggleVibe(vibe.id)}
-                />
-              ))}
-            </View>
-          </Section>
-
-          <Section title="Bezirke" caption="Ohne Auswahl zählt ganz Berlin.">
+          <Section title="Districts" caption="No selection means all of Berlin.">
             <View className="flex-row flex-wrap gap-2">
               {BERLIN_DISTRICTS.map((district) => (
                 <SelectChip
@@ -160,7 +149,7 @@ export default function ProfileScreen() {
             </View>
           </Section>
 
-          <Section title="Budget" caption="Filtert Events oberhalb deines Limits aus.">
+          <Section title="Budget" caption="Hides events above your limit.">
             <View className="flex-row flex-wrap gap-2">
               {BUDGETS.map((budget) => (
                 <SelectChip
@@ -175,9 +164,9 @@ export default function ProfileScreen() {
 
             <View className="border-line bg-card mt-4 flex-row items-center justify-between rounded-3xl border px-4 py-3.5">
               <View className="flex-1 pr-3">
-                <Text className="text-ink text-[14px] font-semibold">Nur kostenlose Events</Text>
+                <Text className="text-ink text-[14px] font-semibold">Free events only</Text>
                 <Text className="text-ink-soft mt-0.5 text-[12px]">
-                  Zeigt ausschließlich Abende ohne Eintritt.
+                  Shows nights without an entry fee.
                 </Text>
               </View>
               <Switch isSelected={freeOnly} onSelectedChange={setFreeOnly}>
@@ -185,6 +174,17 @@ export default function ProfileScreen() {
               </Switch>
             </View>
           </Section>
+
+          <View className="px-5 pt-8">
+            <Pressable
+              accessibilityRole="button"
+              onPress={reset}
+              className="border-line bg-card flex-row items-center justify-center gap-2 rounded-2xl border px-4 py-3.5 active:opacity-70"
+            >
+              <RotateCcw color={palette.inkSoft} size={15} />
+              <Text className="text-ink-soft text-[13.5px] font-semibold">Reset profile</Text>
+            </Pressable>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

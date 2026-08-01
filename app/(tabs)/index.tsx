@@ -48,7 +48,7 @@ export default function FeedScreen() {
       result.push({
         kind: 'section',
         key: 'sec-rec',
-        title: 'Passt zu dir',
+        title: 'Your kind of night',
         caption: `${ranked.recommended.length}`,
       });
       for (const item of ranked.recommended) {
@@ -59,8 +59,8 @@ export default function FeedScreen() {
         kind: 'note',
         key: 'note-empty-rec',
         text: vibes.length
-          ? 'Kein Treffer für diesen Vibe an diesem Abend. Anderer Vibe oder anderes Datum?'
-          : 'An diesem Abend passt nichts exakt zu deinen Interessen.',
+          ? 'Nothing matches this mood on this night. Try another vibe or another date.'
+          : 'Nothing on this night matches your genres exactly.',
       });
     }
 
@@ -68,7 +68,7 @@ export default function FeedScreen() {
       result.push({
         kind: 'section',
         key: 'sec-others',
-        title: ranked.recommended.length ? 'Außerdem in Berlin' : 'In Berlin',
+        title: ranked.recommended.length ? 'Also on in Berlin' : 'On in Berlin',
         caption: `${ranked.others.length}`,
       });
       for (const item of ranked.others) {
@@ -80,7 +80,7 @@ export default function FeedScreen() {
       result.push({
         kind: 'note',
         key: 'note-empty',
-        text: 'Für diesen Abend liegen noch keine Events vor.',
+        text: 'No events listed for this night yet.',
       });
     }
 
@@ -89,8 +89,8 @@ export default function FeedScreen() {
 
   const total = ranked.recommended.length + ranked.others.length;
   const caption = ranked.recommended.length
-    ? `${total} Events · ${ranked.recommended.length} für dich`
-    : `${total} ${total === 1 ? 'Event' : 'Events'}`;
+    ? `${total} events · ${ranked.recommended.length} for you`
+    : `${total} ${total === 1 ? 'event' : 'events'}`;
 
   return (
     <SafeAreaView edges={['top']} className="bg-canvas flex-1">
@@ -120,9 +120,9 @@ export default function FeedScreen() {
                 className="border-brand-tint-strong bg-brand-tint mx-5 mt-4 flex-row items-center justify-between rounded-3xl border p-4 active:opacity-80"
               >
                 <View className="flex-1 pr-3">
-                  <Text className="text-brand text-[15px] font-semibold">Profil einrichten</Text>
+                  <Text className="text-brand text-[15px] font-semibold">Pick your genres</Text>
                   <Text className="text-ink-soft mt-0.5 text-[13px] leading-[18px]">
-                    Musikrichtungen und Vibes festlegen — der Feed sortiert danach.
+                    Set your music taste in the profile — the feed ranks by it.
                   </Text>
                 </View>
                 <ChevronRight color={palette.brand} size={20} />

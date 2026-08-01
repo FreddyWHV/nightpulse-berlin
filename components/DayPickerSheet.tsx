@@ -57,10 +57,10 @@ export function DayPickerSheet({
 
   const quickOptions = useMemo(
     () => [
-      { label: 'Heute', date: tonight },
-      { label: 'Morgen', date: addDays(tonight, 1) },
-      { label: 'Freitag', date: nextWeekday(tonight, 5) },
-      { label: 'Samstag', date: nextWeekday(tonight, 6) },
+      { label: 'Today', date: tonight },
+      { label: 'Tomorrow', date: addDays(tonight, 1) },
+      { label: 'Friday', date: nextWeekday(tonight, 5) },
+      { label: 'Saturday', date: nextWeekday(tonight, 6) },
     ],
     [tonight],
   );
@@ -85,10 +85,11 @@ export function DayPickerSheet({
           <View className="flex-1">
             <View className="px-5 pb-4">
               <BottomSheet.Title className="text-ink text-[19px] font-semibold tracking-[-0.3px]">
-                Datum
+                Which night?
               </BottomSheet.Title>
               <BottomSheet.Description className="text-ink-soft mt-1 text-[13px] leading-[18px]">
-                Eine Nacht läuft bis 6 Uhr morgens — eine Party um 2 Uhr zählt zum Vorabend.
+                A night runs until 6 am — a party starting at 2 am still counts as the evening
+                before.
               </BottomSheet.Description>
 
               <View className="mt-3.5 flex-row flex-wrap gap-2">

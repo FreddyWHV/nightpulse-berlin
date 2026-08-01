@@ -48,22 +48,29 @@ export default function MapScreen() {
     return map;
   }, [located]);
 
+  /**
+   * Pins carry no labels on purpose — name, venue and details only show up once
+   * an event has actually been tapped.
+   */
   const markers = useMemo<MapMarker[]>(
     () =>
       located.flatMap((entry) => {
         const { latitude, longitude } = entry.event;
         if (latitude == null || longitude == null) return [];
+        const isActive = entry.event.id === activeId;
         return [
           {
             id: entry.event.id,
             coordinate: { latitude, longitude },
-            title: entry.event.title,
-            description: [entry.event.venue_name, entry.event.district].filter(Boolean).join(' · '),
+            title: isActive ? entry.event.title : undefined,
+            description: isActive
+              ? [entry.event.venue_name, entry.event.district].filter(Boolean).join(' · ')
+              : undefined,
             color: recommendedIds.has(entry.event.id) ? palette.brand : palette.inkFaint,
           },
         ];
       }),
-    [located, recommendedIds],
+    [located, recommendedIds, activeId],
   );
 
   const active = activeId ? byId.get(activeId) : undefined;
@@ -72,7 +79,7 @@ export default function MapScreen() {
     <SafeAreaView edges={['top']} className="bg-canvas flex-1">
       <FilterHeader
         title={headline}
-        caption={`${located.length} ${located.length === 1 ? 'Ort' : 'Orte'} auf der Karte`}
+        caption={`${located.length} ${located.length === 1 ? 'place' : 'places'} on the map`}
         dateLabel={dateLabel}
         vibeLabel={vibeLabel}
         vibeActive={vibes.length > 0}
@@ -94,11 +101,11 @@ export default function MapScreen() {
         <View className="border-line bg-card/95 absolute top-3 left-5 flex-row items-center gap-3 rounded-full border px-3 py-2">
           <View className="flex-row items-center gap-1.5">
             <View className="bg-brand h-2 w-2 rounded-full" />
-            <Text className="text-ink text-[11px] font-medium">Für dich</Text>
+            <Text className="text-ink text-[11px] font-medium">For you</Text>
           </View>
           <View className="flex-row items-center gap-1.5">
             <View className="bg-ink-faint h-2 w-2 rounded-full" />
-            <Text className="text-ink-soft text-[11px] font-medium">Weitere</Text>
+            <Text className="text-ink-soft text-[11px] font-medium">Everything else</Text>
           </View>
         </View>
 
@@ -107,7 +114,7 @@ export default function MapScreen() {
             <View className="mb-2 flex-row justify-end">
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel="Auswahl schließen"
+                accessibilityLabel="Close event"
                 onPress={() => setActiveId(null)}
                 className="border-line bg-card h-8 w-8 items-center justify-center rounded-full border active:opacity-70"
               >
@@ -123,7 +130,15 @@ export default function MapScreen() {
               }
             />
           </View>
-        ) : null}
+        ) : (
+          <View className="absolute right-0 bottom-5 left-0 items-center">
+            <View className="border-line bg-card/95 rounded-full border px-3.5 py-2">
+              <Text className="text-ink-soft text-[12px] font-medium">
+                Tap a pin to see the event
+              </Text>
+            </View>
+          </View>
+        )}
       </View>
 
       <DayPickerSheet

@@ -1,11 +1,12 @@
 import { Pressable, Text, View } from 'react-native';
 import { CalendarDays, ChevronDown, SlidersHorizontal } from 'lucide-react-native';
 
+import { PulseBadge } from '@/components/PulseLogo';
 import { palette } from '@/lib/colors';
 import { cn } from '@/lib/utils';
 
 interface FilterHeaderProps {
-  /** Big headline, e.g. "Heute Abend". Always one line so both tabs match. */
+  /** Big headline, e.g. "Tonight in Berlin". Always one line so both tabs match. */
   title: string;
   /** One-line context below the headline. */
   caption: string;
@@ -53,8 +54,9 @@ function FilterButton({
 }
 
 /**
- * Fixed top bar shared by feed and map: headline plus the two filter buttons.
- * Both screens render it with identical geometry so the buttons never move.
+ * Fixed top bar shared by feed and map: logo, headline and the two filter
+ * buttons. Both screens render it with identical geometry so nothing moves
+ * when switching tabs.
  */
 export function FilterHeader({
   title,
@@ -67,18 +69,23 @@ export function FilterHeader({
 }: FilterHeaderProps) {
   return (
     <View className="border-line bg-canvas border-b px-5 pt-1 pb-3.5">
-      <Text className="text-brand text-[11px] font-semibold tracking-[1.4px] uppercase">
-        Nachtplan Berlin
-      </Text>
-      <Text
-        numberOfLines={1}
-        className="text-ink mt-1 text-[25px] leading-[30px] font-semibold tracking-[-0.6px]"
-      >
-        {title}
-      </Text>
-      <Text numberOfLines={1} className="text-ink-soft mt-0.5 text-[13px]">
-        {caption}
-      </Text>
+      <View className="flex-row items-center justify-between">
+        <View className="flex-1 pr-3">
+          <Text className="text-brand text-[11px] font-semibold tracking-[1.4px] uppercase">
+            NightPulse Berlin
+          </Text>
+          <Text
+            numberOfLines={1}
+            className="text-ink mt-1 text-[25px] leading-[30px] font-semibold tracking-[-0.6px]"
+          >
+            {title}
+          </Text>
+          <Text numberOfLines={1} className="text-ink-soft mt-0.5 text-[13px]">
+            {caption}
+          </Text>
+        </View>
+        <PulseBadge size={40} />
+      </View>
 
       <View className="mt-3 flex-row gap-2">
         <FilterButton
@@ -86,14 +93,14 @@ export function FilterHeader({
           label={dateLabel}
           active={false}
           onPress={onPressDate}
-          accessibilityLabel="Datum wählen"
+          accessibilityLabel="Pick a date"
         />
         <FilterButton
           icon={<SlidersHorizontal color={vibeActive ? palette.brand : palette.ink} size={15} />}
           label={vibeLabel}
           active={vibeActive}
           onPress={onPressVibe}
-          accessibilityLabel="Vibe wählen"
+          accessibilityLabel="Pick a vibe"
         />
       </View>
     </View>
